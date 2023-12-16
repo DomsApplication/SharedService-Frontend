@@ -18,7 +18,7 @@ Resources:
   DomsStaticWebPageBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "WebPage"]]
+      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "doms-ui"]]
 
 
 #############################################################################################################################################################
