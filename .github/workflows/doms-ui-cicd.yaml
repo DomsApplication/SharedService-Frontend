@@ -76,3 +76,23 @@ jobs:
           echo S3_BUCKET_NAME             : ${{ secrets.S3_BUCKET_NAME }} | sed -e 's/\(.\)/\1 /g'
           echo CLOUDFRONT_DISTRIBUTION_ID : ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} | sed -e 's/\(.\)/\1 /g'
 
+      - name: Setup Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          cache-dependency-path: '${{ inputs.working-directory}}/package-lock.json'  
+
+      - name: Install dependencies
+        run: npm install
+          
+      - name: Generate build
+        #run: npm run build:${{ inputs.env || 'dev' }}
+        run: npm run build
+
+      - name: build path
+        run: |
+          pwd \
+          && cd ${{ inputs.build-dir }} \
+          && echo ************ BUILD PATH **************** \
+          && ls -l
