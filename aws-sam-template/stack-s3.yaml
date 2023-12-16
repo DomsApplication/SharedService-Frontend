@@ -47,8 +47,10 @@ Resources:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault:
             SSEAlgorithm: 'AES256'
-
-
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+    DeletionPolicy: Delete
 
 #############################################################################################################################################################
 # {output}
@@ -64,4 +66,13 @@ Outputs:
     Value: !Ref DomsStaticWebPageBucket
     Export:
       Name: DomsStaticWebPageBucketName
+
+  DomsStaticWebPageLoggingBucketArn:
+    Value: !GetAtt DomsStaticWebPageLoggingBucket.Arn
+    Export:
+      Name: DomsStaticWebPageLoggingBucketArn
+  DomsStaticWebPageLoggingBucketName:
+    Value: !Ref DomsStaticWebPageLoggingBucket
+    Export:
+      Name: DomsStaticWebPageLoggingBucketName
 
