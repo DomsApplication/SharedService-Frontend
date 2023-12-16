@@ -36,6 +36,9 @@ on:
         type: string
         default: ''
 
+permissions:  # added using https://github.com/step-security/secure-workflows
+  id-token: write
+  contents: read
 
 jobs:
 
