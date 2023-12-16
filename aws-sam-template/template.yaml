@@ -85,4 +85,4 @@ Resources:
 #############################################################################################################################################################
 Outputs:
   CFDistributionId:
-    Value: !GetAtt CloudFrontStack.CFDistributionName.DomainName
+    Value: !GetAtt CloudFrontStack.Outputs.CFDistributionId
