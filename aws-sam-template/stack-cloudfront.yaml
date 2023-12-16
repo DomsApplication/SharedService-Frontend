@@ -22,6 +22,8 @@ Parameters:
     Type: String    
   DomsStaticWebPageLoggingBucketName:
     Type: String    
+  DomsStaticWebPageLoggingBucketRegionalDomainName:
+    Type: String    
 
 
 Resources:
@@ -51,7 +53,7 @@ Resources:
           ViewerProtocolPolicy: redirect-to-https
         PriceClass: PriceClass_All
         Logging:
-          Bucket: !GetAtt DomsStaticWebPageLoggingBucketName.RegionalDomainName
+          Bucket: !Ref DomsStaticWebPageLoggingBucketRegionalDomainName
           Prefix: 'doms-ui-access-logs'
         ViewerCertificate:
           CloudFrontDefaultCertificate: true

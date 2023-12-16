@@ -61,6 +61,7 @@ Resources:
         DomsStaticWebPageBucketRegionalDomainName: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketRegionalDomainName
         DomsStaticWebPageLoggingBucketArn: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketArn
         DomsStaticWebPageLoggingBucketName: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketName
+        DomsStaticWebPageLoggingBucketRegionalDomainName: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketRegionalDomainName
       Tags:
         - Key: Name
           Value: CloudFrontStack

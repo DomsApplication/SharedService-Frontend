@@ -82,4 +82,8 @@ Outputs:
     Value: !Ref DomsStaticWebPageLoggingBucket
     Export:
       Name: DomsStaticWebPageLoggingBucketName
+  DomsStaticWebPageLoggingBucketRegionalDomainName:
+    Value: !GetAtt DomsStaticWebPageLoggingBucket.RegionalDomainName
+    Export:
+      Name: DomsStaticWebPageLoggingBucketRegionalDomainName
 
