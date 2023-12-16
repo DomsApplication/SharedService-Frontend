@@ -49,6 +49,13 @@ jobs:
 
     environment: $ {{ inputs.env || 'dev' }}
 
+    # env variables have to be defined after "environment", so GitHub actions knows where to retrieve the secrets
+    env:
+      ROLE_TO_ASSUME: ${{ secrets.ROLE_TO_ASSUME }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+
     if: ${{ github.actor != 'dependabot[bot]' }}
 
     steps:
