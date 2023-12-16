@@ -62,11 +62,11 @@ jobs:
 
       - name: Print debug info
         run: |
-          echo environment/1 is ${{ github.event.inputs.environment }}
-          echo environment/2 is ${{ inputs.env }}
-          echo working directory is $ {{ inputs.working-directory }}
-          echo s3_bucket_name is $ {{ secrets.S3_BUCKET_NAME }} | sed -e 's/\(.\)/\1 /g'
-          echo CLOUDFRONT_DISTRIBUTION_ID is $ {{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} | sed -e 's/\(.\)/\1 /g'
+          echo environment is ${{ inputs.env }}
+          echo working directory is ${{ inputs.working-directory }}
+          echo AWS_REGION is ${{ secrets.AWS_REGION }} | sed -e 's/\(.\)/\1 /g'
+          echo s3_bucket_name is ${{ secrets.S3_BUCKET_NAME }} | sed -e 's/\(.\)/\1 /g'
+          echo CLOUDFRONT_DISTRIBUTION_ID is ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} | sed -e 's/\(.\)/\1 /g'
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
