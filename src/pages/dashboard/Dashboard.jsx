@@ -26,7 +26,7 @@ const Dashboard = () => {
             Dashboard
             <ul>
                 <Link to="/user" style={{ textDecoration: "none" }}>
-                    <li>User</li>
+                    <li>User updated for cloudfront deployment</li>
                 </Link>
             </ul>
         </Box>
