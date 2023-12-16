@@ -5,7 +5,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build and Deploy UI to s3
+name: Build and Deploy to s3
 
 on:
   workflow_dispatch:
@@ -18,6 +18,11 @@ on:
         required: false
         type: string
         default: '.'
+      build-dir:
+        required: true
+        type: string
+        default: build
+
 
 #  pull_request:
 #    branches: [ main ]
