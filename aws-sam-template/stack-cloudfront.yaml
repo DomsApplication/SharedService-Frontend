@@ -80,3 +80,7 @@ Outputs:
     Value: !Ref CFDistribution
     Export:
       Name: CFDistributionName
+  CFDistributionId:
+    Value: !GetAtt CFDistribution.DomainName
+    Export:
+      Name: CFDistributionId
