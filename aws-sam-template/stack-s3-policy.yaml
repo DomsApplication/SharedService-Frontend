@@ -12,7 +12,7 @@ Parameters:
   StackName:
     Type: String
   DomsStaticWebPageBucketArn:
-    Type: String
+    Type: String  
   DomsStaticWebPageBucketName:
     Type: String
   CFDistributionName:

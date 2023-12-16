@@ -65,3 +65,26 @@ Resources:
       Tags:
         - Key: Name
           Value: CloudFrontStack
+
+  # ********************** S3 policy Stack ****************** #
+  S3PolicyStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: stack-s3-policy.yaml
+      Parameters:
+        StackName: !Ref StackName
+        DomsStaticWebPageBucketArn: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketArn
+        DomsStaticWebPageBucketName: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketName
+        CFDistributionName: !GetAtt CloudFrontStack.Outputs.CFDistributionName
+      Tags:
+        - Key: Name
+          Value: S3PolicyStack
+
+#############################################################################################################################################################
+# {output}
+# More info about Output:
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html
+#############################################################################################################################################################
+Outputs:
+  CFDistributionId:
+    Value: !GetAtt CloudFrontStack.Outputs.CFDistributionId
