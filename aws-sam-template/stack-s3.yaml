@@ -14,18 +14,13 @@ Parameters:
 
 Resources:
   
-  # <<<<<<< The Amazon S3 bucket into which our Single Page Application build files must be deployed>>>>>>>>>
+  # <<<<<<< The Amazon S3 bucket into which our Single Page Application build files must be deployed >>>>>>>>>>>>>>>>
   DomsStaticWebPageBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "StaticWebPage"]]
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls : true
-        BlockPublicPolicy : true
-        IgnorePublicAcls : true
-        RestrictPublicBuckets : true
+      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "doms-repo"]]
 
-  
+
 #############################################################################################################################################################
 # {output}
 # More info about Output:
