@@ -101,3 +101,7 @@ jobs:
           && cd ${{ inputs.build-dir }} \
           && echo ************ BUILD PATH **************** \
           && ls -l
+
+      - name: Zip the code and deploy to s3
+        run: |
+          aws s3 sync ./${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}
