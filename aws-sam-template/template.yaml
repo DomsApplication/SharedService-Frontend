@@ -58,6 +58,7 @@ Resources:
         StackName: !Ref StackName
         DomsStaticWebPageBucketArn: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketArn
         DomsStaticWebPageBucketName: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketName
+        DomsStaticWebPageBucketRegionalDomainName: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketRegionalDomainName
         DomsStaticWebPageLoggingBucketArn: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketArn
         DomsStaticWebPageLoggingBucketName: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketName
       Tags:
