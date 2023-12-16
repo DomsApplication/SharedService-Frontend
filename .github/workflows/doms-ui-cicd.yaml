@@ -15,9 +15,6 @@ on:
         required: true
         type: string
         default: build
-      build-command-dotenv-dir:
-        required: false
-        type: string
       build-command:
         required: false
         type: string
@@ -34,14 +31,6 @@ on:
         required: false
         type: boolean
         default: true
-      run-test-flag:
-        required: false
-        type: boolean
-        default: false
-      npm-params:
-        required: false
-        type: string
-        default: ''
       bucket-subdirectory:
         required: false
         type: string
@@ -98,7 +87,8 @@ jobs:
         run: npm install
           
       - name: Generate build
-        run: npm run build:${{ inputs.env || 'dev' }}
+        #run: npm run build:${{ inputs.env || 'dev' }}
+        run: npm run build
 
       - name: build path
         run: |
