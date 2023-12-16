@@ -49,7 +49,7 @@ Resources:
         - Key: Name
           Value: S3Stack
 
-  # ********************** S3 policy Stack ****************** #
+  # ********************** Cloud front Stack ****************** #
   CloudFrontStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -58,8 +58,10 @@ Resources:
         StackName: !Ref StackName
         DomsStaticWebPageBucketArn: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketArn
         DomsStaticWebPageBucketName: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketName
+        DomsStaticWebPageBucketRegionalDomainName: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketRegionalDomainName
         DomsStaticWebPageLoggingBucketArn: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketArn
         DomsStaticWebPageLoggingBucketName: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketName
+        DomsStaticWebPageLoggingBucketRegionalDomainName: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketRegionalDomainName
       Tags:
         - Key: Name
           Value: CloudFrontStack

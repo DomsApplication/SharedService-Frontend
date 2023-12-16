@@ -14,11 +14,11 @@ Parameters:
 
 Resources:
   
-  # <<<<<<< The Amazon S3 bucket into which our Single Page Application build files must be deployed>>>>>>>>>
+  # <<<<<<< The Amazon S3 bucket into which our Single Page Application build files must be deployed >>>>>>>>>>>>>>>>
   DomsStaticWebPageBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "StaticWebPage"]]
+      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "doms-ui"]]
       PublicAccessBlockConfiguration:
         BlockPublicAcls : true
         BlockPublicPolicy : true
@@ -31,14 +31,14 @@ Resources:
         Status: Enabled
       BucketEncryption:
         ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: 'AES256'
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: 'AES256'
 
   # <<<<<<< The Amazon S3 bucket into which access logs from S3 (for the application) and CloudFront will be put >>>>>>>>>
   DomsStaticWebPageLoggingBucket:
-    Type: 'AWS::S3::Bucket'
+    Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "StaticWebPage-logs"]]
+      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "doms-ui-logs"]]
       PublicAccessBlockConfiguration:
         BlockPublicAcls : true
         BlockPublicPolicy : true
@@ -48,13 +48,13 @@ Resources:
         Status: Enabled
       BucketEncryption:
         ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: 'AES256'
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: 'AES256'
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerPreferred
     DeletionPolicy: Delete
-  
+
 #############################################################################################################################################################
 # {output}
 # More info about Output:
@@ -69,6 +69,10 @@ Outputs:
     Value: !Ref DomsStaticWebPageBucket
     Export:
       Name: DomsStaticWebPageBucketName
+  DomsStaticWebPageBucketRegionalDomainName:
+    Value: !GetAtt DomsStaticWebPageBucket.RegionalDomainName
+    Export:
+      Name: DomsStaticWebPageBucketRegionalDomainName
 
   DomsStaticWebPageLoggingBucketArn:
     Value: !GetAtt DomsStaticWebPageLoggingBucket.Arn
@@ -78,4 +82,8 @@ Outputs:
     Value: !Ref DomsStaticWebPageLoggingBucket
     Export:
       Name: DomsStaticWebPageLoggingBucketName
+  DomsStaticWebPageLoggingBucketRegionalDomainName:
+    Value: !GetAtt DomsStaticWebPageLoggingBucket.RegionalDomainName
+    Export:
+      Name: DomsStaticWebPageLoggingBucketRegionalDomainName
 

@@ -16,9 +16,13 @@ Parameters:
     Type: String    
   DomsStaticWebPageBucketName:
     Type: String    
+  DomsStaticWebPageBucketRegionalDomainName:
+    Type: String    
   DomsStaticWebPageLoggingBucketArn:
     Type: String    
   DomsStaticWebPageLoggingBucketName:
+    Type: String    
+  DomsStaticWebPageLoggingBucketRegionalDomainName:
     Type: String    
 
 
@@ -30,8 +34,8 @@ Resources:
     Properties:
       DistributionConfig:
         Origins:
-        - DomainName: !GetAtt DomsStaticWebPageBucketName.RegionalDomainName
-          Id: Doms-cloudfront-S3Origin
+        - DomainName: !Ref DomsStaticWebPageBucketRegionalDomainName
+          Id: Doms-ui-S3Origin
           S3OriginConfig:
             OriginAccessIdentity: ""
           OriginAccessControlId: !GetAtt CloudFrontOriginAccessControl.Id
@@ -42,15 +46,15 @@ Resources:
           - GET
           - HEAD
           - OPTIONS
-          TargetOriginId: Doms-cloudfront-S3Origin
+          TargetOriginId: Doms-ui-S3Origin
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # CachingOptimized
           OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf # CORS-S3Origin
           ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03 # SecurityHeadersPolicy
           ViewerProtocolPolicy: redirect-to-https
         PriceClass: PriceClass_All
         Logging:
-          Bucket: !GetAtt DomsStaticWebPageLoggingBucketName.RegionalDomainName
-          Prefix: 'doms-cloudfront-access-logs'
+          Bucket: !Ref DomsStaticWebPageLoggingBucketRegionalDomainName
+          Prefix: 'doms-ui-access-logs'
         ViewerCertificate:
           CloudFrontDefaultCertificate: true
           MinimumProtocolVersion: 'TLSv1.2_2021'
@@ -72,10 +76,6 @@ Resources:
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html
 #############################################################################################################################################################
 Outputs:
-  CFDistributionArn:
-    Value: !GetAtt CFDistribution.Arn
-    Export:
-      Name: CFDistributionArn
   CFDistributionName:
     Value: !Ref CFDistribution
     Export:

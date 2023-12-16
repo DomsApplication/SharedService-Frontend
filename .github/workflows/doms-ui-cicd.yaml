@@ -1,0 +1,154 @@
+name: Build and Deploy node.js to s3
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        required: true
+        type: environment
+        default: 'dev'
+      working-directory:
+        required: false
+        type: string
+        default: '.'
+      build-dir:      
+        required: true
+        type: string
+        default: build
+      build-command-dotenv-dir:
+        required: false
+        type: string
+      build-command:
+        required: false
+        type: string
+        default: npm run build
+      s3-sync-params:
+        required: false
+        type: string
+        default: ''
+      invalidate-cloudfront-cache:
+        required: false
+        type: boolean
+        default: true
+      delete-previous-artifacts-from-s3:
+        required: false
+        type: boolean
+        default: true
+      run-test-flag:
+        required: false
+        type: boolean
+        default: false
+      npm-params:
+        required: false
+        type: string
+        default: ''
+      bucket-subdirectory:
+        required: false
+        type: string
+        default: ''
+
+
+jobs:
+
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}    
+
+    environment: $ {{ inputs.env || 'dev' }}
+
+    if: ${{ github.actor != 'dependabot[bot]' }}
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Print debug info
+        run: |
+          echo environment/1 is ${{ github.event.inputs.environment }}
+          echo environment/2 is ${{ inputs.env }}
+          echo working directory is $ {{ inputs.working-directory }}
+          echo s3_bucket_name is $ {{ secrets.S3_BUCKET_NAME }} | sed -e 's/\(.\)/\1 /g'
+          echo CLOUDFRONT_DISTRIBUTION_ID is $ {{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} | sed -e 's/\(.\)/\1 /g'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          #aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          #aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+
+      - name: Setup Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          cache-dependency-path: '${{ inputs.working-directory}}/package-lock.json'  
+
+      - name: Install dependencies
+        run: npm install
+          
+      - name: Generate build
+        run: npm run build:${{ inputs.env || 'dev' }}
+
+      - name: build path
+        run: |
+          pwd \
+          && cd ${{ inputs.build-dir }} \
+          && echo ************ BUILD PATH **************** \
+          && ls -l
+
+      - name: Zip the code and deploy to s3
+        run: |
+          aws s3 sunc ${{ inputs.s3-sync-params}} ./${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}${{ inputs.bucket-subdirectory }}
+
+      - name: Invalidate cloudFront cache
+        run: |
+          CLOUDFRONT_INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*" | jq -e -n -r 'input.Invalidation.Id')
+          echo "Invalidation Id is: $CLOUDFRONT_INVALIDATION_ID"
+          echo "CLOUDFRONT_INVALIDATION_ID=$CLOUDFRONT_INVALIDATION_ID" >> $GITHUB_ENV
+
+      - name: Wait for completion of cloudfront invalidation
+        id: wait-for-cache-invalidation-completed
+        if: inputs.invalidate-cloudfront-cache && inputs.delete-previous-artifacts-from-s3 
+        run: |
+          set +e
+          WAIT_FOR_INVALIDATION_SECONDS=120
+          timeout "$WAIT_FOR_INVALIDATION_SECONDS" /bin/bash -s <<SCRIPT
+            while ! timeout 3 aws cloudfront get-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --id $CLOUDFRONT_INVALIDATION_ID | jq -e -n -r 'input.Invalidation.Status' | grep -q 'Completed'; do
+              echo "Invalidation status of id=$CLOUDFRONT_INVALIDATION_ID is not yet 'Completed', trying again..."
+              sleep 1
+            done
+          SCRIPT
+          if [ "$?" == 0 ]
+          then
+            echo "Invalidation of id=$CLOUDFRONT_INVALIDATION_ID completed"
+            echo "CLOUDFRONT_INVALIDATION_COMPLETED=true" >> $GITHUB_ENV
+          else
+            echo "warning: Invalidation incomplete after waiting for $WAIT_FOR_INVALIDATION_SECONDS seconds, skipping of old artifacts"
+            echo "CLOUDFRONT_INVALIDATION_COMPLETED=false" >> $GITHUB_ENV
+          fi
+          set -e
+
+      - name: Delete previous deployment artifacts
+        if: env.CLOUDFRONT_INVALIDATION_COMPLETED == 'true' && inputs.invalidate-cloudfront-cache && inputs.delete-previous-artifacts-from-s3
+        run: |
+          aws s3 sync --delete ./${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}${{ inputs.bucket-subdirectory }}
+
+
+
+
+
+
+
+
+
