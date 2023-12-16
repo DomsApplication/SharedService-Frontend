@@ -1,7 +1,7 @@
 name: Build and Deploy node.js to s3
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       env:
         required: true
