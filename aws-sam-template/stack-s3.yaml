@@ -19,6 +19,18 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "doms-ui"]]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls : true
+        BlockPublicPolicy : true
+        IgnorePublicAcls : true
+        RestrictPublicBuckets : true
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: 'AES256'
+
 
 
 #############################################################################################################################################################
