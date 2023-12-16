@@ -116,7 +116,7 @@ jobs:
         id: wait-for-cache-invalidation-completed
         run: |
           set +e
-          WAIT_FOR_INVALIDATION_SECONDS=120
+          WAIT_FOR_INVALIDATION_SECONDS=180
           timeout "$WAIT_FOR_INVALIDATION_SECONDS" /bin/bash -s <<SCRIPT
             while ! timeout 3 aws cloudfront get-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --id $CLOUDFRONT_INVALIDATION_ID | jq -e -n -r 'input.Invalidation.Status' | grep -q 'Completed'; do
               echo "Invalidation status of id=$CLOUDFRONT_INVALIDATION_ID is not yet 'Completed', trying again..."
