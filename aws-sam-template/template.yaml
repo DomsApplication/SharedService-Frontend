@@ -48,3 +48,18 @@ Resources:
       Tags:
         - Key: Name
           Value: S3Stack
+
+  # ********************** Cloud front Stack ****************** #
+  CloudFrontStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: stack-cloudfront.yaml
+      Parameters:
+        StackName: !Ref StackName
+        DomsStaticWebPageBucketArn: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketArn
+        DomsStaticWebPageBucketName: !GetAtt S3Stack.Outputs.DomsStaticWebPageBucketName
+        DomsStaticWebPageLoggingBucketArn: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketArn
+        DomsStaticWebPageLoggingBucketName: !GetAtt S3Stack.Outputs.DomsStaticWebPageLoggingBucketName
+      Tags:
+        - Key: Name
+          Value: CloudFrontStack

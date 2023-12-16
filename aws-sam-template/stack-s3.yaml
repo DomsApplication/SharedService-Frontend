@@ -24,6 +24,9 @@ Resources:
         BlockPublicPolicy : true
         IgnorePublicAcls : true
         RestrictPublicBuckets : true
+      LoggingConfiguration:
+        DestinationBucketName: !Ref DomsStaticWebPageLoggingBucket
+        LogFilePrefix: s3-access-logs
       VersioningConfiguration:
         Status: Enabled
       BucketEncryption:
