@@ -48,4 +48,3 @@ Resources:
       Tags:
         - Key: Name
           Value: S3Stack
-

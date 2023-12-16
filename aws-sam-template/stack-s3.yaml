@@ -24,13 +24,26 @@ Resources:
         BlockPublicPolicy : true
         IgnorePublicAcls : true
         RestrictPublicBuckets : true
-      LoggingConfiguration:
-        DestinationBucketName: !Ref DomsStaticWebPageLoggingBucket
-        LogFilePrefix: s3-access-logs
       VersioningConfiguration:
         Status: Enabled
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: 'AES256'
+
+  
+#############################################################################################################################################################
+# {output}
+# More info about Output:
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html
+#############################################################################################################################################################
+Outputs:
+  DomsStaticWebPageBucketArn:
+    Value: !GetAtt DomsStaticWebPageBucket.Arn
+    Export:
+      Name: DomsStaticWebPageBucketArn
+  DomsStaticWebPageBucketName:
+    Value: !Ref DomsStaticWebPageBucket
+    Export:
+      Name: DomsStaticWebPageBucketName
 
