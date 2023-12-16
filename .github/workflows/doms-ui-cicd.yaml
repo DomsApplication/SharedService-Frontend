@@ -5,7 +5,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build and Deploy UI to s3
+name: Build and Deploy to s3
 
 on:
   workflow_dispatch:
@@ -18,6 +18,11 @@ on:
         required: false
         type: string
         default: '.'
+      build-dir:
+        required: true
+        type: string
+        default: build
+
 
 #  pull_request:
 #    branches: [ main ]
@@ -75,4 +80,61 @@ jobs:
           echo AWS_REGION                 : ${{ secrets.AWS_REGION }} | sed -e 's/\(.\)/\1 /g'
           echo S3_BUCKET_NAME             : ${{ secrets.S3_BUCKET_NAME }} | sed -e 's/\(.\)/\1 /g'
           echo CLOUDFRONT_DISTRIBUTION_ID : ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} | sed -e 's/\(.\)/\1 /g'
+
+      - name: Setup Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          cache-dependency-path: '${{ inputs.working-directory}}/package-lock.json'  
+
+      - name: Install dependencies
+        run: npm install
+          
+      - name: Generate build
+        #run: npm run build:${{ inputs.env || 'dev' }}
+        run: npm run build
+
+      - name: build path
+        run: |
+          pwd \
+          && cd ${{ inputs.build-dir }} \
+          && echo ************ BUILD PATH **************** \
+          && ls -l
+
+      - name: Zip the code and deploy to s3
+        run: |
+          aws s3 sync ./${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}
+
+      - name: Invalidate cloudFront cache
+        run: |
+          CLOUDFRONT_INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*" | jq -e -n -r 'input.Invalidation.Id')
+          echo "Invalidation Id is: $CLOUDFRONT_INVALIDATION_ID"
+          echo "CLOUDFRONT_INVALIDATION_ID=$CLOUDFRONT_INVALIDATION_ID" >> $GITHUB_ENV
+
+      - name: Wait for completion of cloudfront invalidation
+        id: wait-for-cache-invalidation-completed
+        run: |
+          set +e
+          WAIT_FOR_INVALIDATION_SECONDS=120
+          timeout "$WAIT_FOR_INVALIDATION_SECONDS" /bin/bash -s <<SCRIPT
+            while ! timeout 3 aws cloudfront get-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --id $CLOUDFRONT_INVALIDATION_ID | jq -e -n -r 'input.Invalidation.Status' | grep -q 'Completed'; do
+              echo "Invalidation status of id=$CLOUDFRONT_INVALIDATION_ID is not yet 'Completed', trying again..."
+              sleep 1
+            done
+          SCRIPT
+          if [ "$?" = 0 ]
+          then
+            echo "Invalidation of id=$CLOUDFRONT_INVALIDATION_ID completed"
+            echo "CLOUDFRONT_INVALIDATION_COMPLETED=true" >> $GITHUB_ENV
+          else
+            echo "warning: Invalidation incomplete after waiting for $WAIT_FOR_INVALIDATION_SECONDS seconds, skipping of old artifacts"
+            echo "CLOUDFRONT_INVALIDATION_COMPLETED=false" >> $GITHUB_ENV
+          fi
+          set -e
+
+      - name: Delete previous deployment artifacts
+        if: env.CLOUDFRONT_INVALIDATION_COMPLETED == 'true'
+        run: |
+          aws s3 sync --delete ./${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}
 

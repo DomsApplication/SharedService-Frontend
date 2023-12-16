@@ -1,7 +1,7 @@
 import "./dashboard.scss"
 import { Link } from "react-router-dom";
 import Box from '@mui/material/Box';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 const toolbarStyle = {
     minHeight: '50px',
@@ -26,7 +26,7 @@ const Dashboard = () => {
             Dashboard
             <ul>
                 <Link to="/user" style={{ textDecoration: "none" }}>
-                    <li>User</li>
+                    <li>User updated for cloudfront deployment</li>
                 </Link>
             </ul>
         </Box>

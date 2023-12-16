@@ -1,7 +1,7 @@
 import "./user.scss"
 import { Link } from "react-router-dom";
 import Box from '@mui/material/Box';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 const toolbarStyle = {
     minHeight: '50px',
