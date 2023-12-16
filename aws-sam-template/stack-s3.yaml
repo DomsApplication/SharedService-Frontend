@@ -31,6 +31,23 @@ Resources:
         - ServerSideEncryptionByDefault:
             SSEAlgorithm: 'AES256'
 
+  # <<<<<<< The Amazon S3 bucket into which access logs from S3 (for the application) and CloudFront will be put >>>>>>>>>
+  DomsStaticWebPageLoggingBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "doms-ui-logs"]]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls : true
+        BlockPublicPolicy : true
+        IgnorePublicAcls : true
+        RestrictPublicBuckets : true
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: 'AES256'
+
 
 
 #############################################################################################################################################################
