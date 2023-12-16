@@ -38,7 +38,7 @@ Resources:
   DomsStaticWebPageLoggingBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "StaticWebPage-logs"]]
+      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "StaticWebPage_logs"]]
       PublicAccessBlockConfiguration:
         BlockPublicAcls : true
         BlockPublicPolicy : true
