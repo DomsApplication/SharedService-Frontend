@@ -76,10 +76,6 @@ Resources:
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html
 #############################################################################################################################################################
 Outputs:
-  CFDistributionArn:
-    Value: !GetAtt CFDistribution.Arn
-    Export:
-      Name: CFDistributionArn
   CFDistributionName:
     Value: !Ref CFDistribution
     Export:
