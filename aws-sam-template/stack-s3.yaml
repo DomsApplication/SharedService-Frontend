@@ -1,0 +1,81 @@
+#############################################################################################################################################################
+# {S3 bucket}             
+# More info about Function Resource: 
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3-bucket.html                        
+#############################################################################################################################################################
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  An Amazon S3 bucket for hosting the application:
+
+Parameters:
+  StackName:
+    Type: String
+
+Resources:
+  
+  # <<<<<<< The Amazon S3 bucket into which our Single Page Application build files must be deployed>>>>>>>>>
+  DomsStaticWebPageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "StaticWebPage"]]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls : true
+        BlockPublicPolicy : true
+        IgnorePublicAcls : true
+        RestrictPublicBuckets : true
+      LoggingConfiguration:
+        DestinationBucketName: !Ref DomsStaticWebPageLoggingBucket
+        LogFilePrefix: s3-access-logs
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'AES256'
+
+  # <<<<<<< The Amazon S3 bucket into which access logs from S3 (for the application) and CloudFront will be put >>>>>>>>>
+  DomsStaticWebPageLoggingBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Join [ "-", [!Ref StackName, !Ref AWS::AccountId, "StaticWebPage-logs"]]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls : true
+        BlockPublicPolicy : true
+        IgnorePublicAcls : true
+        RestrictPublicBuckets : true
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'AES256'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+    DeletionPolicy: Delete
+  
+#############################################################################################################################################################
+# {output}
+# More info about Output:
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html
+#############################################################################################################################################################
+Outputs:
+  DomsStaticWebPageBucketArn:
+    Value: !GetAtt DomsStaticWebPageBucket.Arn
+    Export:
+      Name: DomsStaticWebPageBucketArn
+  DomsStaticWebPageBucketName:
+    Value: !Ref DomsStaticWebPageBucket
+    Export:
+      Name: DomsStaticWebPageBucketName
+
+  DomsStaticWebPageLoggingBucketArn:
+    Value: !GetAtt DomsStaticWebPageLoggingBucket.Arn
+    Export:
+      Name: DomsStaticWebPageLoggingBucketArn
+  DomsStaticWebPageLoggingBucketName:
+    Value: !Ref DomsStaticWebPageLoggingBucket
+    Export:
+      Name: DomsStaticWebPageLoggingBucketName
+
