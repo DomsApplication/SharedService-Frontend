@@ -1,0 +1,30 @@
+body {
+  font-family: Roboto, sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.4rem;
+}
+
+::-webkit-scrollbar-track {
+  background-color: whitesmoke;
+  border-radius: 0.2rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(214, 3%, 41%);
+}
+
+div::-webkit-scrollbar {
+  display: none;
+}
+
+div {
+  scrollbar-width: 0;
+}
