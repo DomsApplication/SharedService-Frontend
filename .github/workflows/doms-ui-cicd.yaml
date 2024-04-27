@@ -21,7 +21,7 @@ on:
       build-dir:
         required: true
         type: string
-        default: build
+        default: dist
 
 
 #  pull_request:
@@ -78,19 +78,19 @@ jobs:
           echo environment                : ${{ inputs.env || 'dev' }}
           echo working_directory          : ${{ inputs.working-directory }}
 
-      - name: Setup Node.js 18.x
+      - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
-          cache: 'npm'
-          cache-dependency-path: '${{ inputs.working-directory}}/package-lock.json'  
+          node-version: 20.x
+          cache: 'yarn'
+          cache-dependency-path: '${{ inputs.working-directory}}/yarn.lock'  
 
       - name: Install dependencies
-        run: npm install
+        run: yarn
           
       - name: Generate build
-        #run: npm run build:${{ inputs.env || 'dev' }}
-        run: npm run build
+        run: yarn build-${{ inputs.env || 'dev' }}
+        #run: npm run build
 
       - name: build path
         run: |
