@@ -6,8 +6,17 @@ import DemoPage from "@/pages/DemoPage";
 import SamplePage from "@/pages/SamplePage";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
+import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setAuthToken } from "./app/features/auth-token-slice";
 
 const App = () => {
+  const token = Cookies.get("authToken");
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setAuthToken( token ));
+  }, [token])
   return (
     <>
       <Routes>
