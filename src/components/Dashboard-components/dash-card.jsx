@@ -1,23 +1,32 @@
-import React from "react";
+import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Unstable_Grid2";
 import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
 const DashCard = ({ items }) => {
   return (
     <Box sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center", width: "100%" }}>
-      <Grid container spacing={{ sm: 4, lg: 5 }}>
+      <Grid container   sx={
+        {
+          display: "grid",
+          gridTemplateColumns: { xs: "repeat(1, 1fr)", sm: "repeat(3, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)", xl: "repeat(4, 1fr)" },
+          gap: { xs: 2, sm: 2, md: 3, lg: 4, xl: 5 }
+        }
+      }>
         {items.map((item) => (
           <Grid
-            xs={{
-              xs: 8,
-              sm: 6,
-              md: 4,
-              lg: 3,
-              xl: 3,
-            }}
+            sx={
+              {
+                width: {
+                  xs: "100%",
+                  sm: "1/3",
+                  md: "1/3",
+                  lg: "1/4",
+                  xl: "1/4"
+                }
+              }
+            }
             key={item.label}
           >
             <Card sx={{ maxWidth: { xs: "100%", sm: 300 } }}>
@@ -44,7 +53,7 @@ const DashCard = ({ items }) => {
     </Box>
   );
 };
-DashCard.proptypes = {
+DashCard.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

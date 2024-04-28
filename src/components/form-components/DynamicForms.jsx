@@ -15,9 +15,6 @@ import {
   TextField,
   useMediaQuery,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Formik } from "formik";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
@@ -146,24 +143,7 @@ const DynamicForm = ({ formConfig, label, initialValues = {}, onSubmitCreate, on
                     ))}
                   </Stack>
                 )}
-                {item.type === "date-picker" && (
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      label={item.label}
-                      name={item.name}
-                      value={values[item.name]}
-                      onChange={(newValue) => {
-                        handleChange({
-                          target: {
-                            name: item.name,
-                            value: newValue,
-                          },
-                        });
-                      }}
-                      textField={(props) => <TextField {...props} fullWidth variant="outlined" />}
-                    />
-                  </LocalizationProvider>
-                )}
+               
               </Grid>
             ))}
             <Grid item xs={12}>

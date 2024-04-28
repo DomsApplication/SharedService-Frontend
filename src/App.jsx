@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setAuthToken } from "./app/features/auth-token-slice";
+import GetAllUsers from "./pages/management/GetAllUsers";
 
 const App = () => {
   const token = Cookies.get("authToken");
@@ -23,7 +24,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route index element={<Navigate to={"/dash"} replace />} />
           <Route path="dash" element={<Dashboard />} />
-          <Route path="/form/all" element={<DemoPage />} />
+          <Route path="/users" element={<GetAllUsers />} />
          
           <Route path="sample-page" element={<SamplePage />} />
           <Route path="*" element={<DemoPage />} />
