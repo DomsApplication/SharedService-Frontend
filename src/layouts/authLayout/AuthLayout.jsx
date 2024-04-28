@@ -1,10 +1,10 @@
-import Cookies from "js-cookie";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import AuthWrapper from "./auth-components/AuthWrapper";
 
 const AuthLayout = () => {
-  const token = Cookies.get("authToken");
+  const token = useSelector((state) => state.auth.authToken);
   const navigate = useNavigate();
   useEffect(() => {
     if (token) {

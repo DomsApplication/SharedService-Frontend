@@ -28,8 +28,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                   fontSize: "1rem",
                   fontVariant: "ruby",
                   fontWeight: "bold",
+                  padding: "1.3rem",
                   borderStyle: "solid",
                   borderWidth: "2px",
+                  minWidth: "40%",
                 },
                 duration: 5400,
               }}

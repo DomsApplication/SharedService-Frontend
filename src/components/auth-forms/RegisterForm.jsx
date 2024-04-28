@@ -30,14 +30,12 @@ import {
 // assets
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import toast from "react-hot-toast";
-import { useRegisterUserMutation } from "@/app/features/userApiSlice";
 import Skeleton from "@mui/material/Skeleton";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
-  const [RegisterUser, { isLoading }] = useRegisterUserMutation();
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -57,14 +55,14 @@ const RegisterForm = () => {
 
   return (
     <>
-      {isLoading ? (
+      {/* {isLoading ? (
         <>
           <Skeleton variant="rounded" width={"50%"} height={"40px"} />
           <Skeleton variant="rounded" width={"50%"} height={"40px"} />
           <Skeleton variant="rounded" width={"50%"} height={"40px"} />
           <Skeleton variant="rounded" width={"50%"} height={"40px"} />
         </>
-      ) : (
+      ) : ( */}
         <Formik
           initialValues={{
             firstName: "",
@@ -87,17 +85,7 @@ const RegisterForm = () => {
             password: Yup.string().max(255).required("Password is required"),
           })}
           onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-            try {
-              await RegisterUser(values).unwrap();
-              toast.success("Login Successful");
-              navigate("/");
-            } catch (err) {
-              toast.error(err?.data?.message || "Login failed");
-              setErrors({ submit: err?.data?.message || "Login failed" });
-              setStatus({ success: false });
-            } finally {
-              setSubmitting(false);
-            }
+          console.log(values);
           }}
         >
           {({
@@ -296,7 +284,7 @@ const RegisterForm = () => {
             </form>
           )}
         </Formik>
-      )}
+      {/* )} */}
     </>
   );
 };
