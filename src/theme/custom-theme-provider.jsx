@@ -22,15 +22,15 @@ export default function CustomThemeProvider({ children }) {
 
   const themeOptions = useMemo(
     () => ({
-      breakpoints: {
-        values: {
-          xs: 0,
-          sm: 768,
-          md: 1024,
-          lg: 1266,
-          xl: 1536,
-        },
-      },
+    breakpoints: {
+    values: {
+      xs: 0,    // Default, you often don't need to specify this one, same as Tailwind's 'xs'
+      sm: 640,  // Same as default TailwindCSS 'sm' breakpoint
+      md: 768,  // Overriden to match your specified 'sm' breakpoint
+      lg: 1024, // Same as default TailwindCSS 'lg' breakpoint
+      xl: 1280, // Default, you can adjust if you want it to match your 'lg' or other
+    }
+  },
       direction: "ltr",
       mixins: {
         toolbar: {

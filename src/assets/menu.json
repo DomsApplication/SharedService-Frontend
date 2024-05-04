@@ -1,0 +1,51 @@
+[
+  {
+    "id": "dashboard",
+    "title": "Dashboard",
+    "type": "item",
+    "icon": "DashboardOutlined",
+    "url": "/dash"
+  },
+  {
+    "id": "user-management",
+    "title": "User Management",
+    "type": "submenu",
+    "icon": "ManageAccountsOutlined",
+    "children": [
+      {
+        "id": "user",
+        "title": "User",
+        "type": "item",
+        "url": "/users"
+      },
+      {
+        "id": "role",
+        "title": "Role",
+        "type": "item",
+        "url": "/roles"
+      }
+    ]
+  },
+
+  {
+    "id" : "data-management", 
+  "title" : "Data Management", 
+   "icon" : "ManageAccountsTwoTone",
+    "type" : "item",
+    "url" : "/data-management"
+  },
+  
+  {
+    "id": "settings",
+    "title": "Settings",
+    "type": "item",
+    "icon": "SettingsOutlined",
+    "url": "/settings"
+  },
+ {
+    "id": "sample-page",
+    "title": "Sample Page",
+    "type": "item",
+    "url": "/sample-page"
+  }
+]

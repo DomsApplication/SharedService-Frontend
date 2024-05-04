@@ -23,22 +23,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Toaster
               position="bottom-center"
               gutter={5}
-              toastOptions={{
-                style: {
-                  fontSize: "1rem",
-                  fontVariant: "ruby",
-                  fontWeight: "bold",
-                  padding: "1.3rem",
-                  borderStyle: "solid",
-                  borderWidth: "2px",
-                  minWidth: "40%",
-                },
-                duration: 5400,
-              }}
+              toastOptions={{ duration: 4000 }}
             />
           </ScrollTop>
         </CustomThemeProvider>
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
