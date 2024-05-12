@@ -21,10 +21,10 @@ body {
   background: hsl(214, 3%, 41%);
 }
 
-div::-webkit-scrollbar {
+/* div::-webkit-scrollbar {
   display: none;
 }
 
 div {
   scrollbar-width: 0;
-}
+} */

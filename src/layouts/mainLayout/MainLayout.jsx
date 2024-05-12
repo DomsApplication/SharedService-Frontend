@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 // material-ui
-import { Box, Container, Toolbar, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container, Toolbar } from "@mui/material";
 
 import { openComponentDrawer, openDrawer } from "@/app/features/menuSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,11 +11,8 @@ import DrawerMainIndex from "./Drawer/DrawerMainIndex";
 import Header from "./Header/MainHeaderIndex";
 
 const MainLayout = () => {
-  const theme = useTheme();
-  const matchDownLG = useMediaQuery(theme.breakpoints.down("lg"));
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const pathname = useLocation().pathname;
   const { drawerOpen } = useSelector((state) => state.menu);
 
   const { componentDrawerOpen } = useSelector((state) => state.menu);
@@ -43,7 +39,7 @@ const MainLayout = () => {
     if (!token) {
       navigate("/login", { replace: true });
     }
-  }, [token]);
+  }, [navigate, token]);
   return (
     <div>
       <Box sx={{ display: "flex", width: "100%" }}>

@@ -1,20 +1,25 @@
-- toast notification right
-- remove search box (serach ...) search icon
-
-1. label : short name and version
-   description : text box (full row )
-   two columns each row
-
-2. form description not required
-
-3. - add fields
-   - view repositatory
-
-4. increase count size
-
-5. tool tips for edit and delete, count
+1. property name -> attribute ( label , name )
+2. table data -> ( attribute , description, type , ui-type )
+3. add fields -> attributes
+4. add fields for unique label and id
 
 ---
 
-col 1 table - > name , description ,
-slip
+# primary key :
+
+textbox : title textbox : entity id
+textbox : short name textbox : version
+textbox : Unique name textbox : Unique label  
+Auto Generate unique id <check box>
+textbox : prefix {2-5} numbering schema: {delm, number start from, number of digits}  
+text area: description
+
+ex:
+textbox : prefix => nit
+dropdown: delm => - or \_  
+number field: start from => 1
+number field: length => 5
+
+nit_00001
+nit_00002
+nit_00003

@@ -10,17 +10,24 @@ import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { setAuthToken } from "./app/features/auth-token-slice";
+import DataObjectAddColumns from "./pages/management/Data/DataObjectAddColumns";
 import DataObjects from "./pages/management/Data/DataObjects";
 import UserEditCreatePage from "./pages/management/users/UserEditCreatePage";
 import Users from "./pages/management/users/Users";
-import DataObjectAddColumns from "./pages/management/Data/DataObjectAddColumns";
 
 const App = () => {
-  const token = Cookies.get("authToken");
+  // const token = Cookies.get("authToken");
   const dispatch = useDispatch();
+
+  const token = useMemo(() => {
+    return Cookies.get("authToken");
+  }, []);
+
   useMemo(() => {
-    dispatch(setAuthToken(token));
-  }, [token]);
+    if (token) {
+      dispatch(setAuthToken(token));
+    }
+  }, [token, dispatch]);
   return (
     <>
       <Routes>
@@ -35,12 +42,12 @@ const App = () => {
             element={<DataObjectAddColumns />}
           />
           <Route path="sample-page" element={<SamplePage />} />
-          <Route path="*" element={<DemoPage />} />
         </Route>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
+        <Route path="*" element={<DemoPage />} />
       </Routes>
     </>
   );

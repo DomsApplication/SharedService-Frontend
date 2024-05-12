@@ -6,7 +6,7 @@ import MenuItemsList from "./MenuItemsList";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
+ 
 const DrawerMainIndex = ({
   open,
   handleDrawerToggle,
