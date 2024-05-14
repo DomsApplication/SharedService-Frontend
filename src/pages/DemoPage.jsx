@@ -1,21 +1,47 @@
-import MainCard from "@/components/main-card";
-import { Box, Typography } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { Button, Container } from "@mui/material";
+import { LoaderIcon } from "react-hot-toast";
+import { Link } from "react-router-dom";
 
-const DemoPage = () => {
-  const location = useLocation();
+const PageNotFound = () => {
   return (
-    <Box minHeight={"200vh"}>
-      <MainCard>
-        <Typography variant="h3">DemoPage {location.pathname} </Typography>
-        <Typography>
-          {" "}
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, tempore soluta dolores ipsum ab veritatis ut adipisci harum excepturi
-          nihil provident, animi pariatur quo ipsam libero iusto sed neque autem.{" "}
-        </Typography>
-      </MainCard>
-    </Box>
+    <Container
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        width: "100vw",
+        position: "relative",
+      }}
+    >
+      <Link
+        to="/"
+        style={{
+          textDecoration: "none",
+          position: "absolute",
+          top: 20,
+          left: 4,
+        }}
+      >
+        <Button variant="contained"> Go Back Home </Button>
+      </Link>
+      <Button
+        variant="contained"
+        color="error"
+        startIcon={<LoaderIcon style={{ width: "20px", height: "20px" }} />}
+        sx={{
+          textTransform: "none",
+          fontSize: "1.5rem",
+          padding: "1rem 2rem",
+          borderRadius: "0.5rem",
+          fontWeight: "700",
+        }}
+      >
+        {" "}
+        Page Not Found
+      </Button>
+    </Container>
   );
 };
 
-export default DemoPage;
+export default PageNotFound;

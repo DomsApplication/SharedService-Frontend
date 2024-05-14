@@ -4,7 +4,9 @@ import { Box, Typography } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import {
   DashboardOutlined,
+  DatasetOutlined,
   ManageAccountsOutlined,
+  ManageAccountsTwoTone,
   PersonOutlined,
   QuestionMarkOutlined,
   SettingsOutlined,
@@ -14,6 +16,7 @@ import { useTheme } from "@emotion/react";
 const icons = [
   <DashboardOutlined />,
   <ManageAccountsOutlined />,
+  <DatasetOutlined />,
   <SettingsOutlined />,
   <SettingsOutlined />,
   <PersonOutlined />,
@@ -32,37 +35,34 @@ const data = `
     "url": "/dash"
   },
   {
-    "id": "mangment",
-    "title": "Mangment",
+    "id": "user-management",
+    "title": "User Management",
     "type": "submenu",
     "icon": "ManageAccountsOutlined",
     "children": [
       {
-        "id": "users",
-        "title": "Users",
+        "id": "user",
+        "title": "User",
         "type": "item",
         "url": "/users"
       },
       {
-        "id": "roles",
-        "title": "Roles",
+        "id": "role",
+        "title": "Role",
         "type": "item",
-        "url": "/role"
-      },
-      {
-        "id": "prevlages",
-        "title": "Previalages",
-        "type": "item",
-        "url": "/previalges"
+        "url": "/roles"
       }
     ]
   },
+
   {
-    "id": "sample-page",
-    "title": "Sample Page",
-    "type": "item",
-    "url": "/sample-page"
+    "id" : "data-management", 
+  "title" : "Data Management", 
+   "icon" : "ManageAccountsTwoTone",
+    "type" : "item",
+    "url" : "/data-management"
   },
+  
   {
     "id": "settings",
     "title": "Settings",
@@ -70,19 +70,11 @@ const data = `
     "icon": "SettingsOutlined",
     "url": "/settings"
   },
-  {
-    "id": "profile",
-    "title": "Profile",
+ {
+    "id": "sample-page",
+    "title": "Sample Page",
     "type": "item",
-    "icon": "PersonOutlined",
-    "url": "/profile"
-  },
-  {
-    "id": "help",
-    "title": "Help",
-    "type": "item",
-    "icon": "QuestionMarkOutlined",
-    "url": "/help"
+    "url": "/sample-page"
   }
 ]
 

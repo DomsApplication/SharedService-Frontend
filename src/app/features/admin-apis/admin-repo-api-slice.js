@@ -1,15 +1,19 @@
 //  admin repo api slice
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "js-cookie";
 const api = import.meta.env.VITE_APP_API_URL;
 
 const adminRepoApiSlice = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: api + "/api/admin/repository",
-        headers: {
-            "Content-Type": "application/json",
-            "authorization": Cookies.get("authToken") || "",
-        }
+        prepareHeaders: (headers, { getState }) => {
+            // Extract the authToken from the current state
+            const authToken = getState().auth.authToken;
+            // If we have a token set in state, let's assume that we should be passing it
+            if (authToken) {
+                headers.set('authorization', authToken);
+            }
+            return headers;
+        },
     }),
     reducerPath: "adminRepoApi",
     tagTypes: ["adminRepoApi"],

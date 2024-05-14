@@ -1,29 +1,30 @@
 import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 // material-ui
-import { Box, Toolbar, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container, Toolbar } from "@mui/material";
 
 import { openComponentDrawer, openDrawer } from "@/app/features/menuSlice";
 import { useDispatch, useSelector } from "react-redux";
 
+import Loader from "@/components/Loader";
+import { useAuth0 } from "@auth0/auth0-react";
 import DrawerMainIndex from "./Drawer/DrawerMainIndex";
 import Header from "./Header/MainHeaderIndex";
 
 const MainLayout = () => {
-  const theme = useTheme();
-  const matchDownLG = useMediaQuery(theme.breakpoints.down("lg"));
   const dispatch = useDispatch();
-
   const { drawerOpen } = useSelector((state) => state.menu);
 
   const { componentDrawerOpen } = useSelector((state) => state.menu);
-  const token = useSelector((state) => state.auth.authToken);
+  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
 
-  // drawer toggler
   const [open, setOpen] = useState(drawerOpen);
   const [fullOpen, setFullOpen] = useState(componentDrawerOpen);
+
+  // const token = useSelector((state) => state.auth.authToken);
+
+  // drawer toggler
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -34,20 +35,22 @@ const MainLayout = () => {
   };
 
   const handleDrawerOnly = () => {
-    setOpen(!open);
-    dispatch(openDrawer({ drawerOpen: !open }));
+    setOpen(false);
+    dispatch(openDrawer({ drawerOpen: false }));
   };
 
-  // set media wise responsive drawer
+  // useEffect(() => {
+  //   if (!token) {
+  //     navigate("/login", { replace: true });
+  //   }
+  // }, [navigate, token]);
   useEffect(() => {
-    setOpen(!matchDownLG);
-    dispatch(openDrawer({ drawerOpen: !matchDownLG }));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matchDownLG]);
-
-  if (!token) {
-    return <Navigate to="/login" />;
+    if (!isAuthenticated && !isLoading) {
+      loginWithRedirect();
+    }
+  }, [isAuthenticated, isLoading]);
+  if (isLoading) {
+    return <Loader />;
   }
   return (
     <div>
@@ -59,18 +62,25 @@ const MainLayout = () => {
           fullOpen={fullOpen}
           handleDrawerOnly={handleDrawerOnly}
         />
-        <Box
+        {/* <Box
+        sx={{
+          p: 0,
+          mx: {lg: fullOpen ? "68px" : "40px", xs: "0px"},
+          width:"100%",
+          transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.easeInOut,
+            duration: theme.transitions.duration.shorter,
+          }),
+        }}
           component="main"
-          sx={{
-            width: "100%",
-            flexGrow: 1,
-            p: { xs: 2, sm: 3 },
-            ml: matchDownLG ? 0 : 5,
-          }}
-        >
+        
+         
+        > */}
+        <Container component="main" maxWidth="xl">
           <Toolbar />
           <Outlet />
-        </Box>
+        </Container>
+        {/* </Box> */}
       </Box>
     </div>
   );

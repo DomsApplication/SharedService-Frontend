@@ -1,5 +1,6 @@
-import React from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "@/app/features/auth-api-slice";
+import { login, setAuthToken } from "@/app/features/auth-token-slice";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -15,17 +16,15 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { useLoginMutation } from "@/app/features/auth-api-slice";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Skeleton from "@mui/material/Skeleton";
+import { Formik } from "formik";
+import React from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { login } from "@/app/features/auth-token-slice";
+import { Link as RouterLink } from "react-router-dom";
+import * as Yup from "yup";
 
 const LoginForm = () => {
-  const navigate = useNavigate();
   const [LoginUser, { isLoading }] = useLoginMutation();
   const [checked, setChecked] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -66,7 +65,7 @@ const LoginForm = () => {
             })}
             onSubmit={async (
               values,
-              { setErrors, setStatus, setSubmitting }
+              { setErrors, setStatus, setSubmitting },
             ) => {
               // try {
               //   await LoginUser(values).unwrap();
@@ -84,8 +83,9 @@ const LoginForm = () => {
                 .then((res) => {
                   toast.success("Login Successful");
                   console.log(res);
+                  dispatch(setAuthToken(res.token));
                   dispatch(login({ authToken: res.token }));
-                  navigate("/");
+            
                   setSubmitting(false);
                 })
                 .catch((err) => {

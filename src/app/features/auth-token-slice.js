@@ -4,7 +4,6 @@ import Cookies from 'js-cookie';
 
 const initialState = {
     authToken: null,
-    isAuthenticated: false,
 };
 
 const authenticationSlice = createSlice({
@@ -14,13 +13,11 @@ const authenticationSlice = createSlice({
         login: (state, action) => {
             const { authToken } = action.payload;
             state.authToken = authToken;
-            state.isAuthenticated = true;
             // Set cookie with expiration time
             Cookies.set('authToken', authToken, { expires: 25 / (24 * 60) }); // Expires in 25 minutes
         },
         logout: (state) => {
             state.authToken = null;
-            state.isAuthenticated = false;
             // Remove token from cookie
             Cookies.remove('authToken');
         },
