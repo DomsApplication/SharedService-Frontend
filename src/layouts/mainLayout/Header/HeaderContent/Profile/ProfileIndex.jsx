@@ -27,9 +27,8 @@ import SettingTab from "./SettingTab";
 // assets
 import avatar1 from "@/assets/images/users/avatar-1.png";
 import { LogoutOutlined, Person4, SettingsOutlined } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
-import toast from "react-hot-toast";
-import { logout } from "@/app/features/auth-token-slice";
+// import { logout } from "@/app/features/auth-token-slice";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 
 // tab panel wrapper
@@ -63,14 +62,18 @@ function a11yProps(index) {
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
+  const { logout } = useAuth0();
+
   const theme = useTheme();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleLogout = async () => {
-    //console.log("logout user ");
-    dispatch(logout());
+  const handleLogout = () => {
+    // //console.log("logout user ");
+    // dispatch(logout());
+    // navigate("/login");
+    // toast.success("Logout success");
+    logout({ logoutParams: { returnTo: window.location.origin } });
     navigate("/login");
-    toast.success("Logout success");
   };
 
   const anchorRef = useRef(null);

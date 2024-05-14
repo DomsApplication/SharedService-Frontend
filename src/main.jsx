@@ -11,23 +11,44 @@ import App from "./App.jsx";
 import store from "./app/store.js";
 import "./index.css";
 
+import { Auth0Provider } from "@auth0/auth0-react";
 import ScrollTop from "./hooks/scroll-to-top";
 import CustomThemeProvider from "./theme/custom-theme-provider.jsx";
-ReactDOM.createRoot(document.getElementById("root")).render(
+
+const domain = import.meta.env.VITE_AUTH0_DOMAIN;
+const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
+
+export const RootComponent = () => {
+  return (
+    <Auth0Provider
+      domain={domain}
+      clientId={clientId}
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+      }}
+    >
+      <Provider store={store}>
+        <BrowserRouter basename="/">
+          <CustomThemeProvider>
+            <ScrollTop>
+              <App />
+              <Toaster
+                position="bottom-center"
+                gutter={5}
+                toastOptions={{ duration: 4000 }}
+              />
+            </ScrollTop>
+          </CustomThemeProvider>
+        </BrowserRouter>
+      </Provider>
+    </Auth0Provider>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter basename="/">
-        <CustomThemeProvider>
-          <ScrollTop>
-            <App />
-            <Toaster
-              position="bottom-center"
-              gutter={5}
-              toastOptions={{ duration: 4000 }}
-            />
-          </ScrollTop>
-        </CustomThemeProvider>
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
+    <RootComponent />
+  </React.StrictMode>
 );

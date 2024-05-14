@@ -5,6 +5,7 @@ import CardObjectData from "@/components/Management-components/data/card-data-ob
 import { SearchOutlined } from "@mui/icons-material";
 import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import Loader from "@/components/Loader";
 
 const DataObjects = () => {
   //  get search params
@@ -13,7 +14,12 @@ const DataObjects = () => {
   const { data, isLoading, isError, isSuccess, error } =
     useGetAllAdminObjectsQuery({ search });
   if (isLoading) {
-    return <Typography>Loading...</Typography>;
+    return (
+      <>
+        {" "}
+        <Loader />
+      </>
+    );
   }
   if (isError) {
     return (
