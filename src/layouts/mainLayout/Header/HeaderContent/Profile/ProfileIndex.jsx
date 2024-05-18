@@ -25,11 +25,10 @@ import ProfileTab from "./ProfileTab";
 import SettingTab from "./SettingTab";
 
 // assets
-import avatar1 from "@/assets/images/users/avatar-1.png";
 import { LogoutOutlined, Person4, SettingsOutlined } from "@mui/icons-material";
 // import { logout } from "@/app/features/auth-token-slice";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate } from "react-router-dom";
+import { LoaderIcon } from "react-hot-toast";
 
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
@@ -62,22 +61,32 @@ function a11yProps(index) {
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
-  const { logout } = useAuth0();
-
   const theme = useTheme();
+  const { logout, loginWithRedirect, user, isLoading } = useAuth0();
+
+  const anchorRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(0);
+
+  if (isLoading) {
+    return (
+      <LoaderIcon
+        style={{
+          width: "100px",
+        }}
+      />
+    );
+  }
   // const dispatch = useDispatch();
-  const navigate = useNavigate();
   const handleLogout = () => {
     // //console.log("logout user ");
     // dispatch(logout());
     // navigate("/login");
     // toast.success("Logout success");
     logout({ logoutParams: { returnTo: window.location.origin } });
-    navigate("/login");
+    loginWithRedirect();
   };
 
-  const anchorRef = useRef(null);
-  const [open, setOpen] = useState(false);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -88,8 +97,6 @@ const Profile = () => {
     }
     setOpen(false);
   };
-
-  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -113,11 +120,11 @@ const Profile = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar
-            alt="profile user"
-            src={avatar1}
+            alt={user.email}
+            src={user.picture}
             sx={{ width: 32, height: 32 }}
           />
-          <Typography variant="subtitle1"> {"stystem "}</Typography>
+          <Typography variant="subtitle1"> {user.email}</Typography>
         </Stack>
       </ButtonBase>
       <Popper
@@ -167,12 +174,12 @@ const Profile = () => {
                             alignItems="center"
                           >
                             <Avatar
-                              alt="profile user"
-                              src={avatar1}
+                              alt={user.email}
+                              src={user.picture}
                               sx={{ width: 32, height: 32 }}
                             />
                             <Stack>
-                              <Typography variant="h6">{"system "}</Typography>
+                              <Typography variant="h6">{user.email}</Typography>
                               <Typography variant="body2" color="textSecondary">
                                 {"admin"}
                               </Typography>

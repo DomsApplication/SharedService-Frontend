@@ -22,8 +22,6 @@ const MainLayout = () => {
   const [open, setOpen] = useState(drawerOpen);
   const [fullOpen, setFullOpen] = useState(componentDrawerOpen);
 
-  // const token = useSelector((state) => state.auth.authToken);
-
   // drawer toggler
 
   const handleDrawerToggle = () => {
@@ -39,11 +37,6 @@ const MainLayout = () => {
     dispatch(openDrawer({ drawerOpen: false }));
   };
 
-  // useEffect(() => {
-  //   if (!token) {
-  //     navigate("/login", { replace: true });
-  //   }
-  // }, [navigate, token]);
   useEffect(() => {
     if (!isAuthenticated && !isLoading) {
       loginWithRedirect();
@@ -62,25 +55,10 @@ const MainLayout = () => {
           fullOpen={fullOpen}
           handleDrawerOnly={handleDrawerOnly}
         />
-        {/* <Box
-        sx={{
-          p: 0,
-          mx: {lg: fullOpen ? "68px" : "40px", xs: "0px"},
-          width:"100%",
-          transition: theme.transitions.create("margin", {
-            easing: theme.transitions.easing.easeInOut,
-            duration: theme.transitions.duration.shorter,
-          }),
-        }}
-          component="main"
-        
-         
-        > */}
         <Container component="main" maxWidth="xl">
           <Toolbar />
           <Outlet />
         </Container>
-        {/* </Box> */}
       </Box>
     </div>
   );
