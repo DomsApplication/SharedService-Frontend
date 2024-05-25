@@ -1,6 +1,5 @@
 import DefaultCard from "../component/card.js";
 import * as React from "react";
-import Item from "../component/item.js";
 import Grid from "@mui/material/Grid";
 import { LineChart } from "@mui/x-charts/LineChart";
 

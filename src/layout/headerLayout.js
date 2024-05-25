@@ -371,7 +371,7 @@ function HeadLayout({ toggle }) {
     setUserName(tenantContext.userInfo.name);
     setUserEmail(tenantContext.userInfo.email);
     setUserInfo(tenantContext.userInfo);
-  }, []);
+  }, [tenantContext.userInfo]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
