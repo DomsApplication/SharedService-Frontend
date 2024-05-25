@@ -34,7 +34,6 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { grey } from "@mui/material/colors";
 import Grid from "@mui/material/Grid";
-import Item from "../component/item.js";
 
 const toolbarStyle = {
   minHeight: "50px",
@@ -163,15 +162,6 @@ function HeadLayout({ toggle }) {
       </MenuItem>
     </Menu>
   );
-
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -381,7 +371,7 @@ function HeadLayout({ toggle }) {
     setUserName(tenantContext.userInfo.name);
     setUserEmail(tenantContext.userInfo.email);
     setUserInfo(tenantContext.userInfo);
-  });
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>

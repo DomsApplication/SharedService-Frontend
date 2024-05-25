@@ -1,4 +1,3 @@
-import { on } from "events";
 
 const Util = (function () {
   return {
@@ -6,8 +5,7 @@ const Util = (function () {
       document.addEventListener(eventName, listener);
     },
     off(eventName, listener) {
-      document.removeEventListener(eventName, listener);
-    },
+      document.
   };
 })();
 

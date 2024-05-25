@@ -13,7 +13,6 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import CalendarViewDayIcon from '@mui/icons-material/CalendarViewDay';
 import SettingsIcon from '@mui/icons-material/Settings';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
-import Tooltip from '@mui/material/Tooltip';
 
 /**
  * Link used to implemet

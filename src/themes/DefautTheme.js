@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material';
-import { deepmerge } from '@mui/utils';
 
 export const APP_DEFAULT_THEME = createTheme({
   components: {
