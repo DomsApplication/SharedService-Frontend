@@ -1,8 +1,9 @@
 // Import all necessary modules and icons
 import { useGetAdminObjectQuery } from "@/app/features/admin-apis/admin-object-api-slice";
 import HeadingNav from "@/components/heading-nav";
+import AddAttributesDialog from "@/components/Management-components/data/add-attributes-dialog";
 import EditColumnsDrawerActions from "@/components/Management-components/data/edit-columns-DrawerActions";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
@@ -23,6 +24,7 @@ const columns = [
       >
         <span style={{ whiteSpace: "pre-wrap" }}>
           <EditColumnsDrawerActions
+            label={params.row.label || ""}
             propertyName={params.value}
             description={params.row.description}
             display_ui={params.row.display_ui}
@@ -34,6 +36,7 @@ const columns = [
             maxLength={params.row.maxLength}
             pattern={params.row.pattern}
             ui_type={params.row.ui_type}
+            options={params.row.options}
           />
         </span>
       </Box>
@@ -72,6 +75,25 @@ const DataObjectAddColumns = () => {
             { link: `/data-management/${objectId}`, label: objectId },
           ]}
         />
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box>
+            <Typography variant="h4" sx={{ my: 2 }}>
+              Add Attributes to {data.title}
+            </Typography>
+            <Typography variant="subtitle2" sx={{ my: 2 }}>
+              {data?.description}
+            </Typography>
+          </Box>
+          {/*  add a button to add columns */}
+          <AddAttributesDialog dataObject={data} />
+        </Box>
 
         {/* DataGrid to display values */}
         <Box sx={{ height: 400, width: "100%", my: 2 }}>

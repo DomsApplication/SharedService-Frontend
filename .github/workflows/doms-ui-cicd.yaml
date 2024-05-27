@@ -89,8 +89,9 @@ jobs:
         run: yarn
           
       - name: Generate build
-        run: yarn build-${{ inputs.env || 'dev' }}
+        #run: yarn build-${{ inputs.env || 'dev' }}
         #run: npm run build
+        run: yarn build
 
       - name: build path
         run: |

@@ -607,7 +607,7 @@ const AddDataObjectDialog = () => {
                 >
                   <Button
                     type="button"
-                    variant="outlined"
+                    variant="contained"
                     color="secondary"
                     size="small"
                     onClick={handleClose}

@@ -17,9 +17,9 @@ import {
   TextField,
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
+import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 import * as yup from "yup";
-import PropTypes from "prop-types";
 
 const EditDataObjectForm = ({ id, handleClose }) => {
   const [createAdminObject] = useUpdateAdminObjectMutation();
@@ -397,67 +397,20 @@ const EditDataObjectForm = ({ id, handleClose }) => {
               </Box>
 
               {/*  auto generate id (using Switch ) and other properties */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 3,
-                  alignItems: "center",
-                  flexDirection: {
-                    xs: "column",
-                    sm: "row",
-                    md: "row",
-                    lg: "row",
-                    xl: "row",
-                  },
-                }}
-              >
-                <FormLabel
-                  sx={{
-                    color: "text.primary",
-                  }}
-                >
-                  Auto Generate ID
-                </FormLabel>
-                <Field
-                  as={CheckBox}
-                  name="auto_generate_id"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.auto_generate_id}
-                />
-                <Box>
-                  {touched.auto_generate_id && errors.auto_generate_id && (
-                    <FormHelperText error>
-                      {errors.auto_generate_id}
-                    </FormHelperText>
-                  )}
-                </Box>
-              </Box>
-
-              {/* other properties are shown only if auto generate id is true */}
-              {/*  other properties -> prefix , delimiter , start from  and length */}
               {values.auto_generate_id && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: 3,
-                    alignItems: "center",
-                    flexDirection: {
-                      xs: "column",
-                      sm: "row",
-                      md: "row",
-                      lg: "row",
-                      xl: "row",
-                    },
-                  }}
-                >
+                <>
                   <Box
                     sx={{
-                      width: {
-                        xs: "100%",
-                        sm: "50%",
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: 3,
+                      alignItems: "center",
+                      flexDirection: {
+                        xs: "column",
+                        sm: "row",
+                        md: "row",
+                        lg: "row",
+                        xl: "row",
                       },
                     }}
                   >
@@ -466,87 +419,139 @@ const EditDataObjectForm = ({ id, handleClose }) => {
                         color: "text.primary",
                       }}
                     >
-                      Prefix
+                      Auto Generate ID
                     </FormLabel>
                     <Field
-                      as={TextField}
-                      name="prefix"
+                      as={CheckBox}
+                      name="auto_generate_id"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.prefix}
-                      error={Boolean(errors.prefix && touched.prefix)}
-                      helperText={touched.prefix && errors.prefix}
-                      fullWidth
+                      value={values.auto_generate_id}
+                      disabled
                     />
-                  </Box>
-                  <Box
-                    sx={{
-                      width: {
-                        xs: "100%",
-                        sm: "50%",
-                      },
-                    }}
-                  >
-                    <FormLabel>Delimiter</FormLabel>
-                    <Field
-                      as={Select}
-                      name="delimiter"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.delimiter}
-                      error={Boolean(errors.delimiter && touched.delimiter)}
-                      helperText={touched.delimiter && errors.delimiter}
-                      fullWidth
-                    >
-                      {["-", "_"].map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Field>
+                    <Box>
+                      {touched.auto_generate_id && errors.auto_generate_id && (
+                        <FormHelperText error>
+                          {errors.auto_generate_id}
+                        </FormHelperText>
+                      )}
+                    </Box>
                   </Box>
 
                   <Box
                     sx={{
-                      width: {
-                        xs: "100%",
-                        sm: "50%",
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: 3,
+                      alignItems: "center",
+                      flexDirection: {
+                        xs: "column",
+                        sm: "row",
+                        md: "row",
+                        lg: "row",
+                        xl: "row",
                       },
                     }}
                   >
-                    <FormLabel>Start From</FormLabel>
-                    <Field
-                      as={TextField}
-                      name="start_from"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.start_from}
-                      error={Boolean(errors.start_from && touched.start_from)}
-                      helperText={touched.start_from && errors.start_from}
-                      fullWidth
-                    />
+                    <Box
+                      sx={{
+                        width: {
+                          xs: "100%",
+                          sm: "50%",
+                        },
+                      }}
+                    >
+                      <FormLabel
+                        sx={{
+                          color: "text.primary",
+                        }}
+                      >
+                        Prefix
+                      </FormLabel>
+                      <Field
+                        as={TextField}
+                        name="prefix"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.prefix}
+                        error={Boolean(errors.prefix && touched.prefix)}
+                        helperText={touched.prefix && errors.prefix}
+                        fullWidth
+                        disabled
+                      />
+                    </Box>
+                    <Box
+                      sx={{
+                        width: {
+                          xs: "100%",
+                          sm: "50%",
+                        },
+                      }}
+                    >
+                      <FormLabel>Delimiter</FormLabel>
+                      <Field
+                        as={Select}
+                        name="delimiter"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.delimiter}
+                        error={Boolean(errors.delimiter && touched.delimiter)}
+                        helperText={touched.delimiter && errors.delimiter}
+                        fullWidth
+                        disabled
+                      >
+                        {["-", "_"].map((option) => (
+                          <MenuItem key={option} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Field>
+                    </Box>
+
+                    <Box
+                      sx={{
+                        width: {
+                          xs: "100%",
+                          sm: "50%",
+                        },
+                      }}
+                    >
+                      <FormLabel>Start From</FormLabel>
+                      <Field
+                        as={TextField}
+                        name="start_from"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.start_from}
+                        error={Boolean(errors.start_from && touched.start_from)}
+                        helperText={touched.start_from && errors.start_from}
+                        fullWidth
+                        disabled
+                      />
+                    </Box>
+                    <Box
+                      sx={{
+                        width: {
+                          xs: "100%",
+                          sm: "50%",
+                        },
+                      }}
+                    >
+                      <FormLabel>Length</FormLabel>
+                      <Field
+                        as={TextField}
+                        name="length"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.length}
+                        error={Boolean(errors.length && touched.length)}
+                        helperText={touched.length && errors.length}
+                        fullWidth
+                        disabled
+                      />
+                    </Box>
                   </Box>
-                  <Box
-                    sx={{
-                      width: {
-                        xs: "100%",
-                        sm: "50%",
-                      },
-                    }}
-                  >
-                    <FormLabel>Length</FormLabel>
-                    <Field
-                      as={TextField}
-                      name="length"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.length}
-                      error={Boolean(errors.length && touched.length)}
-                      helperText={touched.length && errors.length}
-                      fullWidth
-                    />
-                  </Box>
-                </Box>
+                </>
               )}
 
               {/* description */}
@@ -580,7 +585,7 @@ const EditDataObjectForm = ({ id, handleClose }) => {
             >
               <Button
                 type="button"
-                variant="outlined"
+                variant="contained"
                 color="secondary"
                 size="small"
                 onClick={handleClose}
