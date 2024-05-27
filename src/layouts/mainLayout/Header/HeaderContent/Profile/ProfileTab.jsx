@@ -2,22 +2,22 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 
 // material-ui
-import { useTheme } from "@mui/material/styles";
 import {
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 // assets
 import {
   EditOutlined,
-  Person2,
   LogoutOutlined,
-  AccountBox,
+  Person2Outlined,
   WalletOutlined,
 } from "@mui/icons-material";
+import ProfileModel from "./profileModel";
 
 // ==============================|| HEADER PROFILE - PROFILE TAB ||============================== //
 
@@ -49,22 +49,16 @@ const ProfileTab = ({ handleLogout }) => {
         </ListItemIcon>
         <ListItemText primary="Edit Profile" />
       </ListItemButton>
-      <ListItemButton
-        selected={selectedIndex === 1}
-        onClick={(event) => handleListItemClick(event, 1)}
-      >
-        <ListItemIcon>
-          <AccountBox />
-        </ListItemIcon>
-        <ListItemText primary="View Profile" />
-      </ListItemButton>
-
+      <ProfileModel
+        handleListItemClick={handleListItemClick}
+        selectedIndex={selectedIndex}
+      />
       <ListItemButton
         selected={selectedIndex === 3}
         onClick={(event) => handleListItemClick(event, 3)}
       >
         <ListItemIcon>
-          <Person2 />
+          <Person2Outlined />
         </ListItemIcon>
         <ListItemText primary="Social Profile" />
       </ListItemButton>

@@ -14,6 +14,7 @@ import "./index.css";
 import { Auth0Provider } from "@auth0/auth0-react";
 import ScrollTop from "./hooks/scroll-to-top";
 import CustomThemeProvider from "./theme/custom-theme-provider.jsx";
+import AcceptCookies from "./components/auth-forms/enable-cookie-for-auth.jsx";
 
 const domain = import.meta.env.VITE_AUTH0_DOMAIN;
 const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
@@ -38,6 +39,7 @@ export const RootComponent = () => {
                 toastOptions={{ duration: 4000 }}
               />
             </ScrollTop>
+            <AcceptCookies />
           </CustomThemeProvider>
         </BrowserRouter>
       </Provider>
