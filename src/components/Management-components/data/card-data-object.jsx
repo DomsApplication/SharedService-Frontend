@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import DeleteDataObjectDialog from "./delete-data-object-dialog";
 import EditDataObjectDialog from "./edit-data-object-dialog";
 
-const CardObjectData = ({ title, description, id, count, shortName }) => {
+const CardObjectData = ({ title, description, id, count }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuClick = (event) => {

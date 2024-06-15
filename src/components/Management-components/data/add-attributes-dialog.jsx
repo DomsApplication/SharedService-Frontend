@@ -9,7 +9,6 @@ import {
   DialogTitle,
   FormHelperText,
   FormLabel,
-  Paper,
   TextareaAutosize,
   TextField,
 } from "@mui/material";
@@ -110,7 +109,6 @@ const AddAttributesDialog = ({ dataObject }) => {
                   flexDirection={"column"}
                   gap={2}
                   width={"100%"}
-                  component={Paper}
                 >
                   {/* propertyLabel and propertyId */}
                   <Box

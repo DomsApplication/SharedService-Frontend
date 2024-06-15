@@ -8,7 +8,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Cookies from "js-cookie";
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/auth/LoginPage";
 import DataObjectAddColumns from "./pages/management/Data/DataObjectAddColumns";
 import DataObjects from "./pages/management/Data/DataObjects";
@@ -16,8 +16,13 @@ import UserEditCreatePage from "./pages/management/users/UserEditCreatePage";
 import Users from "./pages/management/users/Users";
 
 import Loader from "@/components/Loader";
+import HomePage from "./pages/HomePage";
+import LandingLayout from "./layouts/landingPageLayout/LandingLayout";
+import LoginButton from "./pages/oauth/login";
+import DataRepo from "./pages/management/Data/DataRepo";
+import DataRepoEditAndCreate from "./pages/management/Data/DataRepoCreateAndEdit";
 const App = () => {
-  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
+  const { isLoading } = useAuth0();
 
   const dispatch = useDispatch();
 
@@ -31,26 +36,32 @@ const App = () => {
     }
   }, [token, dispatch]);
 
-  useMemo(() => {
-    if (!isAuthenticated && !isLoading) {
-      loginWithRedirect();
-    }
-  }, [isAuthenticated, isLoading]);
   if (isLoading) {
     return <Loader />;
   }
   return (
     <>
       <Routes>
+        <Route path="/" element={<LandingLayout />}>
+          <Route index element={<HomePage />} />
+        </Route>
+        <Route path="/signin" element={<LoginButton />} />
         <Route element={<MainLayout />}>
-          <Route index element={<Navigate to={"/dash"} replace />} />
           <Route path="dash" element={<Dashboard />} />
           <Route path="/users" element={<Users />} />
           <Route path="/users/:id" element={<UserEditCreatePage />} />
           <Route path="/data-management" element={<DataObjects />} />
           <Route
-            path="data-management/:objectId"
+            path="/data-management/:objectId"
             element={<DataObjectAddColumns />}
+          />
+          <Route
+            path="/data-management/:objectId/repo"
+            element={<DataRepo />}
+          />
+          <Route
+            path="/data-management/:objectId/repo/:id"
+            element={<DataRepoEditAndCreate />}
           />
           <Route path="sample-page" element={<SamplePage />} />
         </Route>

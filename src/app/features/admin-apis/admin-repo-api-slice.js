@@ -24,6 +24,7 @@ const adminRepoApiSlice = createApi({
                 url: `/${id}`,
                 method: "GET",
             }),
+            providesTags: ["adminRepoApi"],
         }),
 
         // get one record in repo
@@ -32,6 +33,7 @@ const adminRepoApiSlice = createApi({
                 url: `/${id}/${subId}`,
                 method: "GET",
             }),
+            providesTags: ["adminRepoApi"],
         }),
 
         createAdminRepo: builder.mutation({
@@ -40,6 +42,7 @@ const adminRepoApiSlice = createApi({
                 method: "POST",
                 body: adminRepo
             }),
+            invalidatesTags: ["adminRepoApi"],
         }),
 
         updateAdminRepo: builder.mutation({
@@ -48,13 +51,15 @@ const adminRepoApiSlice = createApi({
                 method: "PATCH",
                 body: adminRepo
             }),
+            invalidatesTags: ["adminRepoApi"],
         }),
 
         deleteAdminRepo: builder.mutation({
-            query: (id) => ({
-                url: `/${id}`,
+            query: ({ id, subId }) => ({
+                url: `/${id}/${subId}`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["adminRepoApi"],
         }),
 
     }),

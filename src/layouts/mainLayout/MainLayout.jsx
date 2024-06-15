@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 
 // material-ui
-import { Box, Container, Toolbar } from "@mui/material";
+import { Toolbar } from "@mui/material";
 
 import { openComponentDrawer, openDrawer } from "@/app/features/menuSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 import DrawerMainIndex from "./Drawer/DrawerMainIndex";
 import Header from "./Header/MainHeaderIndex";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const MainLayout = () => {
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
   const dispatch = useDispatch();
   const { drawerOpen } = useSelector((state) => state.menu);
 
@@ -33,22 +35,27 @@ const MainLayout = () => {
     setOpen(false);
     dispatch(openDrawer({ drawerOpen: false }));
   };
+  useEffect(() => {
+    if (!isAuthenticated) {
+      loginWithRedirect();
+    }
+  }, [isAuthenticated]);
 
   return (
     <div>
-      <Box sx={{ display: "flex", width: "100%" }}>
-        <Header open={fullOpen} handleDrawerToggle={handleDrawerToggle} />
+      <Header open={fullOpen} handleDrawerToggle={handleDrawerToggle} />
+      <div className="flex w-full">
         <DrawerMainIndex
           open={open}
           handleDrawerToggle={handleDrawerToggle}
           fullOpen={fullOpen}
           handleDrawerOnly={handleDrawerOnly}
         />
-        <Container component="main" maxWidth="xl">
+        <div className="w-full container">
           <Toolbar />
           <Outlet />
-        </Container>
-      </Box>
+        </div>
+      </div>
     </div>
   );
 };

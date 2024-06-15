@@ -78,19 +78,8 @@ const DataObjects = () => {
             <AddDataObjectDialog />
           </Box>
         </Box>
-        <Box
-          sx={{
-            height: "100%",
-            width: "100%",
-            display: "grid",
-            gridTemplateColumns: {
-              sm: "repeat(3, 1fr)",
-              md: "repeat(4, 1fr), lg:repeat(4, 1fr) , xl:repeat(4, 1fr)",
-            },
-            pt: 2,
-            gap: 2,
-          }}
-        >
+
+        <Box className="w-full grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {/* Card */}
           {data.map((obj) => (
             <CardObjectData

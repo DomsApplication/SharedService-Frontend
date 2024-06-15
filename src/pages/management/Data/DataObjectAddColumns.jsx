@@ -8,46 +8,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
-// Define the columns for DataGrid
-const columns = [
-  {
-    field: "propertyName",
-    headerName: "Attribute Name",
-    width: 200,
-    renderCell: (params) => (
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <span style={{ whiteSpace: "pre-wrap" }}>
-          <EditColumnsDrawerActions
-            label={params.row.label || ""}
-            propertyName={params.value}
-            description={params.row.description}
-            display_ui={params.row.display_ui}
-            required={params.row.required}
-            unique={params.row.unique}
-            type={params.row.type}
-            searchable={params.row.searchable}
-            minLength={params.row.minLength}
-            maxLength={params.row.maxLength}
-            pattern={params.row.pattern}
-            ui_type={params.row.ui_type}
-            options={params.row.options}
-          />
-        </span>
-      </Box>
-    ),
-  },
-  { field: "description", headerName: "Description", width: 200 },
-  { field: "type", headerName: "Type", width: 130 },
-  { field: "ui_type", headerName: "UI Type", width: 130 },
-  // ... (define additional columns as needed)
-];
-
 // The main component
 const DataObjectAddColumns = () => {
   const objectId = useParams().objectId;
@@ -66,6 +26,49 @@ const DataObjectAddColumns = () => {
     return <div>Error</div>;
   }
   if (isSuccess) {
+    const columns = [
+      {
+        field: "propertyName",
+        headerName: "Attribute Name",
+        width: 200,
+        renderCell: (params) => (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={{ whiteSpace: "pre-wrap" }}>
+              <EditColumnsDrawerActions
+                dataObject={data}
+                label={params.row.label || ""}
+                propertyName={params.value}
+                description={params.row.description}
+                display_ui={params.row.display_ui}
+                required={params.row.required}
+                unique={params.row.unique}
+                type={params.row.type}
+                searchable={params.row.searchable}
+                minLength={params.row.minLength}
+                maxLength={params.row.maxLength}
+                pattern={params.row.pattern}
+                ui_type={params.row.ui_type}
+                options={params.row.options}
+              />
+            </span>
+          </Box>
+        ),
+      },
+      { field: "description", headerName: "Description", width: 200 },
+      { field: "type", headerName: "Type", width: 130 },
+      { field: "ui_type", headerName: "UI Type", width: 130 },
+      // ... (define additional columns as needed)
+    ];
+    // add class name to clomuns  for custom styling
+    columns.forEach((column) => {
+      column.headerClassName = " text-lg font-extrabold";
+    });
     return (
       <Box>
         <HeadingNav
@@ -98,6 +101,7 @@ const DataObjectAddColumns = () => {
         {/* DataGrid to display values */}
         <Box sx={{ height: 400, width: "100%", my: 2 }}>
           <DataGrid
+            className="*:text-center *:text-[0.875rem] *:font-medium"
             rows={Object.entries(data?.properties || []).map(
               ([key, value]) => ({
                 id: key,
@@ -115,6 +119,7 @@ const DataObjectAddColumns = () => {
             }}
             columns={columns}
             pageSize={5}
+            pageSizeOptions={[5, 10, 25]}
             rowsPerPageOptions={[5, 10, 25]}
             disableSelectionOnClick
             disableColumnFilter
