@@ -23,9 +23,10 @@ import {
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import React from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const Users = () => {
+const DataRepo = () => {
+  const objectId = useParams().objectId;
   const navigate = useNavigate();
   const {
     data: objectData,
@@ -33,18 +34,21 @@ const Users = () => {
     isLoading: isObjectLoading,
     error: objectError,
     isSuccess: isObjectSuccess,
-  } = useGetAdminObjectQuery("user");
+  } = useGetAdminObjectQuery(objectId);
   const { data, isError, isLoading, error, isSuccess } =
-    useGetAdminRepoQuery("user");
-  const [deleteUserMutation] = useDeleteAdminRepoMutation();
+    useGetAdminRepoQuery(objectId);
+  const [deleteMutation] = useDeleteAdminRepoMutation();
 
+  // console.log("objectData", objectData);
+  // console.log("data", data);
+  // console.log("id", objectData?.properties.entity.uniquekey);
   // Delete dialog state
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-  const [selectedUserId, setSelectedUserId] = React.useState(null);
+  const [selectedId, setSelectedId] = React.useState(null);
 
   // Action handlers
   const handleOpenDeleteDialog = (id) => {
-    setSelectedUserId(id);
+    setSelectedId(id);
     setOpenDeleteDialog(true);
   };
 
@@ -54,21 +58,21 @@ const Users = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await deleteUserMutation(selectedUserId).unwrap();
-      toast.success("User deleted successfully");
+      await deleteMutation({ id: objectId, subId: selectedId }).unwrap();
+      toast.success(`${objectData.title} deleted successfully`);
     } catch (error) {
-      toast.error("Failed to delete user");
+      toast.error(`Failed to delete ${objectData.title}`);
     } finally {
       handleCloseDeleteDialog();
     }
   };
 
-  const navigateToUserEdit = (id) => {
-    navigate(`/users/${id}`);
+  const navigateToEdit = (id) => {
+    navigate(`/data-management/${objectId}/repo/${id}`);
   };
 
-  const navigateToAddUser = () => {
-    navigate("/users/new");
+  const navigateToAdd = () => {
+    navigate(`/data-management/${objectId}/repo/new`);
   };
 
   if (isObjectError || isError) {
@@ -100,24 +104,23 @@ const Users = () => {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      width: 100,
+
       getActions: (params) => [
         <>
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={() => navigateToUserEdit(params.id)}
+            onClick={() => navigateToEdit(params.id)}
             color="inherit"
           />
-          ,
+
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => handleOpenDeleteDialog(params.id)}
             color="inherit"
           />
-          ,
         </>,
       ],
     });
@@ -136,7 +139,8 @@ const Users = () => {
         <HeadingNav
           navLinks={[
             { link: "/", label: "Dashboard" },
-            { link: "/users", label: "Users" },
+            { link: "/data-management", label: "Data Management" },
+            { link: `/data-management/${objectId}/repo`, label: Object.title },
           ]}
         />
         <Box
@@ -161,9 +165,9 @@ const Users = () => {
             variant="contained"
             color="primary"
             startIcon={<AddIcon />}
-            onClick={navigateToAddUser}
+            onClick={navigateToAdd}
           >
-            Add User
+            Add {objectData.title}
           </Button>
         </Box>
 
@@ -178,7 +182,7 @@ const Users = () => {
             }}
             rows={data.map((item) => ({
               ...item,
-              id: item.user_id,
+              id: item[objectData?.properties.entity.uniquekey],
               //  add class to rows
               className: " text-sm font-medium text-gray-900",
             }))}
@@ -214,7 +218,7 @@ const Users = () => {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Are you sure you want to delete this user?
+              Are you sure you want to delete this {objectData.title}?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -240,4 +244,4 @@ const Users = () => {
   }
 };
 
-export default Users;
+export default DataRepo;

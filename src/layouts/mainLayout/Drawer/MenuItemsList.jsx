@@ -96,7 +96,7 @@ const MenuItemsList = () => {
   return (
     <Menu>
       <Box sx={{ py: 1 }}>
-        <MenuItem icon={<Logo />}>
+        <MenuItem icon={<Logo />} component={<Link to="/" />}>
           <Typography variant="h4"> DOMS</Typography>
         </MenuItem>
       </Box>

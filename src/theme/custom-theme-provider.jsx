@@ -16,21 +16,20 @@ import componentsOverride from "./overrides/componentsOverride";
 export default function CustomThemeProvider({ children }) {
   const theme = Palette("light", "default");
 
-   
   const themeTypography = Typography(`'Public Sans', sans-serif`);
   const themeCustomShadows = useMemo(() => CustomShadows(theme), [theme]);
 
   const themeOptions = useMemo(
     () => ({
-    breakpoints: {
-    values: {
-      xs: 0,    // Default, you often don't need to specify this one, same as Tailwind's 'xs'
-      sm: 640,  // Same as default TailwindCSS 'sm' breakpoint
-      md: 768,  // Overriden to match your specified 'sm' breakpoint
-      lg: 1024, // Same as default TailwindCSS 'lg' breakpoint
-      xl: 1280, // Default, you can adjust if you want it to match your 'lg' or other
-    }
-  },
+      breakpoints: {
+        values: {
+          xs: 0, // Default, you often don't need to specify this one, same as Tailwind's 'xs'
+          sm: 640, // Same as default TailwindCSS 'sm' breakpoint
+          md: 768, // Overriden to match your specified 'sm' breakpoint
+          lg: 1024, // Same as default TailwindCSS 'lg' breakpoint
+          xl: 1280, // Default, you can adjust if you want it to match your 'lg' or other
+        },
+      },
       direction: "ltr",
       mixins: {
         toolbar: {

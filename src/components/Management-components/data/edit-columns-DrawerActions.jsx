@@ -1,7 +1,9 @@
+import { useUpdateAdminObjectMutation } from "@/app/features/admin-apis/admin-object-api-slice";
 import { LinkOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
+  Checkbox,
   Drawer,
   FormLabel,
   MenuItem,
@@ -12,13 +14,11 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Form, FieldArray, Formik } from "formik";
+import { FieldArray, Form, Formik } from "formik";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import * as yup from "yup";
-import { useUpdateAdminObjectMutation } from "@/app/features/admin-apis/admin-object-api-slice";
 import toast from "react-hot-toast";
-
+import * as yup from "yup";
 const EditColumnsDrawerActions = ({
   dataObject,
   label,
@@ -32,7 +32,6 @@ const EditColumnsDrawerActions = ({
   minLength,
   maxLength,
   pattern,
-  options,
 }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -52,8 +51,10 @@ const EditColumnsDrawerActions = ({
   ];
 
   const validationSchema = yup.object({
+    propertyName: yup.string().required("Property name is required"),
+    description: yup.string().required("Description is required"),
     type: yup.string().required("Type is required"),
-    ui_type: yup.string().required("UI Type is required"),
+    ui_type: yup.string().required("UI Type is required").default("string"),
     required: yup.boolean(),
     display_ui: yup.boolean(),
     searchable: yup.boolean(),
@@ -61,23 +62,16 @@ const EditColumnsDrawerActions = ({
     maxLength: yup.number(),
     pattern: yup.string(),
     options: yup.array().when("ui_type", {
-      is: (value) =>
-        value === "select" || value === "checkbox" || value === "radio",
-      then: yup
-        .array()
-        .of(
-          yup.object().shape({
-            label: yup.string().required("Label is required"),
-            value: yup.string().required("Value is required"),
-          })
-        )
-        .min(1, "At least one option is required"),
-      otherwise: yup.array().of(
-        yup.object().shape({
-          label: yup.string().notRequired(),
-          value: yup.string().notRequired(),
-        })
-      ),
+      is: "select" || "checkbox" || "radio",
+      then: (schema) =>
+        schema
+          .of(
+            yup.object().shape({
+              label: yup.string().required("Label is required"),
+              value: yup.string().required("Value is required"),
+            })
+          )
+          .required("Options are required"),
     }),
   });
 
@@ -86,6 +80,9 @@ const EditColumnsDrawerActions = ({
   return (
     <>
       <Tooltip title="Edit Columns">
+        {/* <IconButton onClick={handleOpen}>
+              <Link />
+        </IconButton> */}
         <Button
           onClick={handleOpen}
           endIcon={<LinkOutlined />}
@@ -95,49 +92,28 @@ const EditColumnsDrawerActions = ({
         </Button>
       </Tooltip>
 
-      <Drawer
-        anchor="right"
-        open={open}
-        onClose={handleClose}
-        variant="temporary"
-        PaperProps={{
-          sx: {
-            width: {
-              xs: "90%",
-              sm: 450,
-              md: 450,
-              lg: 450,
-              xl: 450,
-            },
-            zIndex: 2000, // Ensure that the zIndex is set properly
-          },
-        }}
-        ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
-        }}
-        sx={{ zIndex: 1302 }}
-        disableScrollLock
-        PaperComponent={({ children }) => children}
-        transitionDuration={0}
-      >
+      <Drawer anchor="right" open={open} onClose={handleClose}>
         <Formik
           initialValues={{
+            propertyName,
+            description,
             type,
             ui_type,
-            required,
-            display_ui,
-            searchable,
+            required: required || false,
+            display_ui: display_ui || false,
+            searchable: searchable || false,
             minLength,
             maxLength,
             pattern,
-            options: options || [],
           }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting }) => {
+            const properties = dataObject.properties;
+
             const updatedObject = {
               ...dataObject,
               properties: {
-                ...dataObject.properties,
+                ...properties,
                 [propertyName]: {
                   label,
                   description,
@@ -159,23 +135,8 @@ const EditColumnsDrawerActions = ({
             }
           }}
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            isSubmitting,
-          }) => (
-            <Form
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-                overflow: "auto",
-              }}
-            >
+          {({ values, errors, touched, handleChange, handleBlur }) => (
+            <Form>
               <Box
                 p={2}
                 display="flex"
@@ -184,24 +145,26 @@ const EditColumnsDrawerActions = ({
                 width="400px"
                 component={Paper}
               >
-                <Typography variant="h6">
-                  Edit{" "}
-                  <span
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    {label}
-                  </span>
-                </Typography>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Typography variant="h6">
+                    Edit Columns
+                    <span
+                      style={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      {label}
+                    </span>
+                  </Typography>
+                </Box>
                 <Box>
-                  <FormLabel> Type</FormLabel>
+                  <FormLabel> Type </FormLabel>
                   <Select
                     name="type"
                     variant="outlined"
                     size="small"
                     fullWidth
-                    value={values.type}
+                    value={values.type || "string"}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={Boolean(errors.type && touched.type)}
@@ -220,13 +183,10 @@ const EditColumnsDrawerActions = ({
                     variant="outlined"
                     size="small"
                     fullWidth
-                    value={values.ui_type}
+                    value={values.ui_type || "text"}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={Boolean(errors.ui_type && touched.ui_type)}
-                    sx={{
-                      zIndex: 4,
-                    }}
                   >
                     {ui_typeOptions.map((option) => (
                       <MenuItem key={option} value={option}>
@@ -237,13 +197,13 @@ const EditColumnsDrawerActions = ({
                 </Box>
                 <Box>
                   <FormLabel>Required</FormLabel>
-                  <Switch
+                  <Checkbox
                     name="required"
                     variant="outlined"
                     size="small"
-                    fullWidth
                     checked={values.required}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                   />
                 </Box>
                 <Box>
@@ -252,9 +212,9 @@ const EditColumnsDrawerActions = ({
                     name="display_ui"
                     variant="outlined"
                     size="small"
-                    fullWidth
                     checked={values.display_ui}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                   />
                 </Box>
                 <Box>
@@ -263,9 +223,9 @@ const EditColumnsDrawerActions = ({
                     name="searchable"
                     variant="outlined"
                     size="small"
-                    fullWidth
                     checked={values.searchable}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                   />
                 </Box>
                 <Box>
@@ -310,58 +270,60 @@ const EditColumnsDrawerActions = ({
                     helperText={touched.pattern && errors.pattern}
                   />
                 </Box>
-
+                {/*  options */}
                 {["select", "checkbox", "radio"].includes(values.ui_type) && (
                   <FieldArray
                     name="options"
                     render={(arrayHelpers) => (
                       <Box>
                         <FormLabel>Options</FormLabel>
-                        {values.options.map((option, index) => (
-                          <Box key={index} display="flex" gap={1} mb={1}>
-                            <TextField
-                              name={`options.${index}.label`}
-                              variant="outlined"
-                              size="small"
-                              label="Label"
-                              value={option.label}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              error={Boolean(
-                                errors.options?.[index]?.label &&
-                                  touched.options?.[index]?.label
-                              )}
-                              helperText={
-                                touched.options?.[index]?.label &&
-                                errors.options?.[index]?.label
-                              }
-                            />
-                            <TextField
-                              name={`options.${index}.value`}
-                              variant="outlined"
-                              size="small"
-                              label="Value"
-                              value={option.value}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              error={Boolean(
-                                errors.options?.[index]?.value &&
-                                  touched.options?.[index]?.value
-                              )}
-                              helperText={
-                                touched.options?.[index]?.value &&
-                                errors.options?.[index]?.value
-                              }
-                            />
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              onClick={() => arrayHelpers.remove(index)}
-                            >
-                              Remove
-                            </Button>
-                          </Box>
-                        ))}
+
+                        {values?.options?.length > 0 &&
+                          values?.options.map((option, index) => (
+                            <Box key={index} display="flex" gap={1} mb={1}>
+                              <TextField
+                                name={`options.${index}.label`}
+                                variant="outlined"
+                                size="small"
+                                label="Label"
+                                value={option.label || ""}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={Boolean(
+                                  errors.options?.[index]?.label &&
+                                    touched.options?.[index]?.label
+                                )}
+                                helperText={
+                                  touched.options?.[index]?.label &&
+                                  errors.options?.[index]?.label
+                                }
+                              />
+                              <TextField
+                                name={`options.${index}.value`}
+                                variant="outlined"
+                                size="small"
+                                label="Value"
+                                value={option.value || ""}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={Boolean(
+                                  errors.options?.[index]?.value &&
+                                    touched.options?.[index]?.value
+                                )}
+                                helperText={
+                                  touched.options?.[index]?.value &&
+                                  errors.options?.[index]?.value
+                                }
+                              />
+                              <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => arrayHelpers.remove(index)}
+                              >
+                                Remove
+                              </Button>
+                            </Box>
+                          ))}
                         <Button
                           variant="contained"
                           onClick={() =>
@@ -375,6 +337,7 @@ const EditColumnsDrawerActions = ({
                   />
                 )}
 
+                {/*  options */}
                 <Box
                   sx={{
                     display: "flex",
@@ -386,15 +349,10 @@ const EditColumnsDrawerActions = ({
                     onClick={handleClose}
                     variant="contained"
                     color="secondary"
-                    disabled={isSubmitting}
                   >
                     Cancel
                   </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={isSubmitting}
-                  >
+                  <Button type="submit" variant="contained">
                     Submit
                   </Button>
                 </Box>
