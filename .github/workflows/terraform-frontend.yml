@@ -57,7 +57,7 @@ jobs:
         run: |
           # passes a NPM_TOKEN which has access to private repo as client app doesn't pass such credential in when calling tf composite module.
           # credit: https://github.com/hashicorp/setup-terraform/issues/33
-          git config --global url."https://oauth2:${{ secret.NPM_TOKEN }}@github.com".insteadOf https://github.com
+          git config --global url."https://oauth2:${{ secrets.NPM_TOKEN }}@github.com".insteadOf https://github.com
           export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
           cd ${TF_ROOT}
           infracost breakdown --path=. \
