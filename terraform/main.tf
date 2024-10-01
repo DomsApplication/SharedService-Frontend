@@ -19,7 +19,7 @@ provider "aws" {
 # Module for static website
 ####################################
 module "static_website" {
-  source = "resources"
+  source = "./resources"
 
     stack_name = var.stack_name
     env = var.deploy_env
