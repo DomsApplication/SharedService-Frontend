@@ -12,7 +12,7 @@ on:
         description: "working direcory"
         required: false
         type: string
-        default: "./terraform"
+        default: "./terraform/frontend"
       apply-branch:
         description: "Allowed branch"
         required: false
@@ -145,8 +145,8 @@ jobs:
           echo deploy_env: ${{github.event.inputs.environment }}
           echo branch/tag name: ${{ github.ref_name }}
           echo sts get-caller-identity
-          echo ROLE_TO_ASSUME: ${{ secrets.ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 \g'
-          echo TERRAFORM_ROLE_TO_ASSUME: ${{ secrets.TERRAFORM_ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 \g'
+          echo ROLE_TO_ASSUME: ${{ secrets.ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 /g'
+          echo TERRAFORM_ROLE_TO_ASSUME: ${{ secrets.TERRAFORM_ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 /g'
 
       - name: Create json file from github secrets
         uses: jsdaniell/create-json@v1.2.3
