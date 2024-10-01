@@ -1,8 +1,3 @@
-variable "aws_account_id" {
-  description = "AWS Account ID"
-  type        = string
-}
-
 variable "aws_region" {
     description = "AWS region"
     type = string
@@ -57,11 +52,6 @@ variable "pipeline_token" {
   default = ""
 }
 
-variable "dns_name" {
-  description = "DNSname of application"
-  type = string
-}
-
 variable "cache_ttl_min" {
   description = "Cloudfront default cache ttl min values"
   type = number
@@ -75,29 +65,4 @@ variable "cache_ttl_default" {
 variable "cache_ttl_max" {
   description = "Cloudfront default cache ttl max values"
   type = number
-}
-
-variable "block_ofac_countries" {
-  description = "Whether or not block OFAC sanctioned countries"
-  type = bool
-  default = false
-}
-
-variable "ofac_countries" {
-    description = "OFAC countires list"
-    type = list
-    default = ["BY", "CU", "IR", "KP", "RU", "SY", "US", "CA", "GB", "DE", "IN"]
-  
-}
-
-variable "html_404" {
-  description = "Pathto 404 HTML page"
-  type = string
-  default = "/404.html"
-}
-
-variable "html_403" {
-  description = "Pathto 403 HTML page"
-  type = string
-  default = "/index.html"
 }
