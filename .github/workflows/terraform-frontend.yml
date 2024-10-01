@@ -86,7 +86,7 @@ jobs:
       - name: Run TFLint
         run: tflint -f compact        
 
-      - name: Run Terraform
+      - name: Run Terrascan
         uses: tenable/terrascan-action@main
         with:
           iac_type: 'terraform'
