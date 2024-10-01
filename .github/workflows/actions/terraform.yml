@@ -1,0 +1,186 @@
+name: "Terraform script run workflow"
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: false
+        type: string
+        default: "./terraform"
+      apply-branch:
+        required: false
+        type: string
+        default: "main"
+
+default:
+  run:
+    shell: bash
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    environment: ${{ github.event.inputs.environment || 'dev' }}
+
+    env:
+      DEPLOY_REPO: ${{ github.event.repository.name }}
+      DEPLOY_ENV: ${{ github.event.inputs.environment || 'dev' }}
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.0
+        with:
+          egress-policy: audit
+
+      - name: Setup variables
+        id: vars
+        working-directory: .
+        run: |
+          echo "ROLE_TO_ASSUME=${{ vars.ROLE_TO_ASSUME || secret.ROLE_TO_ASSUME || env.ROLE_TO_ASSUME }}" >> $GITHUB_OUTPUT
+          echo "AWS_REGION=${{ vars.AWS_REGION || secret.AWS_REGION || env.AWS_REGION }}" >> $GITHUB_OUTPUT
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          #aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          #aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+
+      - name: Cache plugin Directory
+        uses: actions/cache@v4
+        with:
+          path: ~/.tflint.d/plugins 
+          key: ubuntu-latest-tflint-${{ hashFiles('.tflint.hcl') }}
+
+      - name: Setup TFlint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: Show version
+        run: tflint --version
+
+      - name: Init TFLint
+        run: tflint --init              
+
+      - name: Run TFLint
+        run: tflint -f compact        
+
+      - name: Run Terraform
+        uses: tenable/terrascan-action@main
+        with:
+          iac_type: 'terraform'
+          iac_version: 'v14'
+          iac_dir: ${{ inputs.working-directory }}
+          policy_type: 'aws'
+          only_warn: true       
+          scm_token: ${{ secrets.NPM_TOKEN }}
+          verbose: true
+          sarif_upload: true
+          #non_recursive:
+          #iac_dir:
+          #policy_path:
+          #skip_rules:
+          #config_path:
+          #find_vulnerabilities:
+          #webhook_url:
+          #webhook_token:
+
+      - name: Run Checkov action
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ inputs.working-directory }}
+          quiet: true # optional: display only failed checks
+          soft_fail: true # optional: do not return an error code if there are failed checks
+          framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
+          output_file_path: reports/results.sarif # folder and name of results file
+          download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry
+          log_level: DEBUG # optional: set log level. Default WARNING
+          #file: example/tfplan.json # optional: provide the path for resource to be scanned. This will override the directory if both are provided.
+          #check: CKV_AWS_1 # optional: run only a specific check_id. can be comma separated list
+          #skip_check: CKV_AWS_2 # optional: skip a specific check_id. can be comma separated list
+          #skip_framework: terraform # optional: skip a specific infrastructure {cloudformation,terraform,kubernetes,all}
+          #skip_cve_package: CVE_2019_8331 # optional: skip a specific CVE package in SCA scans, can be comma separated list
+          #output_bc_ids: true # optional: output Bridgecrew platform IDs instead of checkov IDs
+          #repo_root_for_plan_enrichment: example/ #optional: Directory containing the hcl code used to generate a given terraform plan file. Use together with `file`
+          #var_file: ./testdir/gocd.yaml # optional: variable files to load in addition to the default files. Currently only supported for source Terraform and Helm chart scans.
+          #config_file: path/this_file
+          #baseline: cloudformation/.checkov.baseline # optional: Path to a generated baseline file. Will only report results not in the baseline.
+          #container_user: 1000 # optional: Define what UID and / or what GID to run the container under to prevent permission issues
+          #use_enforcement_rules: true # optional - use enforcement rule configs from the platform
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with: 
+          terraform_wrapper: false # The wrapper script installation can be skipped by setting the terraform_wrapper variable to false:
+
+      - name: Print debug info
+        run: |
+          echo github actor: ${{  github.actor }}
+          echo environment: ${{ github.event.inputs.environment }}
+          echo working-directory: ${{ inputs.working-directory }}
+          echo repository: ${{ github.repository }}
+          echo deploy_repo: ${{github.event.reposiotry.name }}
+          echo deploy_env: ${{github.event.inputs.environment }}
+          echo branch/tag name: ${{ github.ref_name }}
+          echo sts get-caller-identity
+          echo ROLE_TO_ASSUME: ${{ secret.ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 \g'
+          echo TERRAFORM_ROLE_TO_ASSUME: ${{ secret.TERRAFORM_ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 \g'
+
+      - name: Create json file from github secrets
+        uses: jsdaniell/create-json@v1.2.3
+        with: 
+          name: "secret.json"
+          json: ${{ secrets.SECRET_VALUE }}
+          dir: ${{ inputs.working-directory }}
+
+      - name: Terraform Init
+        id: init
+        run: | 
+          # passes a NPM_TOKEN which has access to private repo as client app doesn't pass such credential in when calling tf composite module.
+          # credit: https://github.com/hashicorp/setup-terraform/issues/33
+          git config --global url."https://oauth2:${{ secret.NPM_TOKEN }}@github.com".insteadOf https://github.com
+          rm -rf .trraform
+          terraform init -backend-config='./.env/${{ github.event.inputs.environment || 'dev' }}/backend.tfvars' -upgrade=true -input=false
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          # Convert repo and env to lower case and pass to terraform as env variables
+          export TF_VAR_deploy_repo=${DEPLOY_REPO,,}
+          export TF_VAR_deploy_env=${DEPLOY_ENV,,}
+          export TF_VAR_deploy_user=${GITHUB_ACTOR}
+          export TF_VAR_pipeline_token=${{ secret.PIPELINE_TOKEN }}
+          terraform plan -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
+
+      - name: Terraform Apply
+        if: ${{ github.ref != 'ref/heads/destroy' }}
+        id: apply
+        run: |
+          # Convert repo and env to lower case and pass to terraform as env variables
+          export TF_VAR_deploy_repo=${DEPLOY_REPO,,}
+          export TF_VAR_deploy_env=${DEPLOY_ENV,,}
+          export TF_VAR_deploy_user=${GITHUB_ACTOR}
+          export TF_VAR_pipeline_token=${{ secret.PIPELINE_TOKEN }}
+          terraform apply -auto-approve -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
+
+      - name: Terraform Destroy
+        if: ${{ always &&  github.ref == 'ref/heads/destroy' }}
+        id: destroy
+        run: |
+          # Convert repo and env to lower case and pass to terraform as env variables
+          export TF_VAR_deploy_repo=${DEPLOY_REPO,,}
+          export TF_VAR_deploy_env=${DEPLOY_ENV,,}
+          export TF_VAR_deploy_user=${GITHUB_ACTOR}
+          export TF_VAR_pipeline_token=${{ secret.PIPELINE_TOKEN }}
+          terraform destroy -auto-approve -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
+   

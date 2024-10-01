@@ -1,0 +1,52 @@
+{
+  "user": [
+    {
+      "firstName": "RamaMD",
+      "lastName": "RamaMD",
+      "email": "ram.rama@test.com",
+      "phoneNumber": "118121239812",
+      "systemUser": false,
+      "id": "d5ea"
+    },
+    {
+      "id": "26ac",
+      "firstName": "Shama",
+      "lastName": "Sam",
+      "email": "sam.shama@test.com",
+      "phoneNumber": "92832818723",
+      "systemUser": false
+    },
+    {
+      "firstName": "RamaKrishn",
+      "lastName": "Krishna",
+      "email": "ramakrishna@test.com",
+      "phoneNumber": "7627123512312",
+      "systemUser": true,
+      "id": "00f6"
+    },
+    {
+      "id": "040a",
+      "firstName": "system",
+      "lastName": "system",
+      "email": "system@test.com",
+      "phoneNumber": "1111111111",
+      "systemUser": true
+    },
+    {
+      "id": "c143",
+      "firstName": "Jony",
+      "lastName": "Land",
+      "email": "jony.land@gg.com",
+      "phoneNumber": "+1 2837129",
+      "systemUser": false
+    },
+    {
+      "id": "4104",
+      "firstName": "superuser",
+      "lastName": "administration",
+      "email": "superuser.admin@gemini.com",
+      "phoneNumber": "9901823129",
+      "systemUser": true
+    }
+  ]
+}
