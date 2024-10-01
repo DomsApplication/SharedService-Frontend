@@ -13,22 +13,80 @@ on:
         required: false
         type: string
         default: "./terraform"
-      apply-branch:
-        description: "Allowed branch"
-        required: false
-        type: string
-        default: "main"
 
 defaults:
   run:
     shell: bash
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
+  pull-requests: write
 
 jobs:
+  infracost:
+    name: Infracost Analysis
+    runs-on: ubuntu-latest
+    env:
+      TF_ROOT: ${{inputs.working.directory}}
+    environment: ${{inputs.env || 'dev'}}
+
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.0
+        with:
+          egress-policy: audit
+
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v3
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v3     
+
+      - name: Print debug info
+        run: |
+          echo environment is ${{ inputs.env }}
+          echo TF_ROOT is ${TF_ROOT}
+          echo terraform-var-file is ${{ inputs.terraform-var-file }}
+
+      # Generate Infracost json file
+      - name: Generate Infracost estimate
+        run: |
+          # passes a NPM_TOKEN which has access to private repo as client app doesn't pass such credential in when calling tf composite module.
+          # credit: https://github.com/hashicorp/setup-terraform/issues/33
+          git config --global url."https://oauth2:${{ secret.NPM_TOKEN }}@github.com".insteadOf https://github.com
+          export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
+          cd ${TF_ROOT}
+          infracost breakdown --path=. \
+                              --terraform-var-file=${{ inputs.terraform-var-file }} \
+                              --usage-file ${{ inputs.usage-file }} \
+                              --format=json \
+                              --out-file=/temp/infracost.json
+
+      # Post a comment to the PR using the 'update' behavior.
+      # This creates a single comment and updates it. The "quietest" option.
+      # The other valid behaviors are:
+      # delete-and-new: Delete previous comment and create a new one.
+      # hide-and-new: Minimize previous comment and create a new one.
+      # new: new cost estimate comment on every push.
+      # update: Update a cost estimate comment when there is a changes in the cost estimate.
+      # Also refer the https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests 
+      - name: Post Infracost comment
+        run: |
+          export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
+          inftacost comment github --path=/temp/infracost.json \
+                                   --repo=$GITHUB_REPOSITORY \
+                                   --github-token=${{github.token}} \
+                                   --commit=$GITHUB_SHA \
+                                   --behavior=new \
+                                   --policy-path=${TF_ROOT}/infracost-policy.rego                   
+
   terraform:
+    name: Terraform Run
+    needs: infracost
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -65,49 +123,6 @@ jobs:
           #aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
-
-      - name: Setup Infracost
-        uses: infracost/actions/setup@v3
-        with:
-          api-key: ${{ secrets.INFRACOST_API_KEY }}
-
-      - name: Print infracost debug info
-        run: |
-          echo environment is ${{ input.env }}
-          echo TF_ROOT is ${TF_ROOT}
-          echo terraform-var-file is ${{ inputs.terraform-var-file }}
-
-      # Generate Infracost json file
-      - name: Generate Infracost estimate
-        run: |
-          # passes a NPM_TOKEN which has access to private repo as client app doesn't pass such credential in when calling tf composite module.
-          # credit: https://github.com/hashicorp/setup-terraform/issues/33
-          git config --global url."https://oauth2:${{ secret.NPM_TOKEN }}@github.com".insteadOf https://github.com
-          export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
-          cd ${TF_ROOT}
-          infracost breakdown --path=. \
-                              --terraform-var-file=${{ inputs.terraform-var-file }} \
-                              --usage-file ${{ inputs.usage-file }} \
-                              --format=json \
-                              --out-file=/temp/infracost.json
-
-      # Post a comment to the PR using the 'update' behavior.
-      # This creates a single comment and updates it. The "quietest" option.
-      # The other valid behaviors are:
-      # delete-and-new: Delete previous comment and create a new one.
-      # hide-and-new: Minimize previous comment and create a new one.
-      # new: new cost estimate comment on every push.
-      # update: Update a cost estimate comment when there is a changes in the cost estimate.
-      # Also refer the https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests 
-      - name: Post Infracost comment
-        run: |
-          export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
-          inftacost comment github --path=/temp/infracost.json \
-                                   --repo=$GITHUB_REPOSITORY \
-                                   --github-token=${{github.token}} \
-                                   --commit=$GITHUB_SHA \
-                                   --behavior=new \
-                                   --policy-path=${TF_ROOT}/infracost-policy.rego                   
 
       - name: Cache plugin Directory
         uses: actions/cache@v4
