@@ -186,7 +186,7 @@ jobs:
           terraform apply -auto-approve -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
 
       - name: Terraform Destroy
-        if: ${{ always &&  github.ref == 'ref/heads/destroy' }}
+        if: ${{ github.ref == 'ref/heads/destroy' }}
         id: destroy
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
