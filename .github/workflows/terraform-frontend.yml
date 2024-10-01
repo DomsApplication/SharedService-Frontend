@@ -28,8 +28,8 @@ jobs:
     name: Infracost Analysis
     runs-on: ubuntu-latest
     env:
-      TF_ROOT: ${{inputs.working.directory}}
-    environment: ${{inputs.env || 'dev'}}
+      TF_ROOT: ${{ inputs.working-directory }}
+    environment: ${{ inputs.env || 'dev' }}
 
     if: github.actor != 'dependabot[bot]'
     steps:
@@ -48,9 +48,9 @@ jobs:
 
       - name: Print debug info
         run: |
-          echo environment is ${{ inputs.env }}
-          echo TF_ROOT is ${TF_ROOT}
-          echo terraform-var-file is ${{ inputs.terraform-var-file }}
+          echo environment: ${{ inputs.env }}
+          echo TF_ROOT: ${TF_ROOT}
+          echo terraform-var-file: ${{ inputs.terraform-var-file }}
 
       # Generate Infracost json file
       - name: Generate Infracost estimate
@@ -61,8 +61,8 @@ jobs:
           export INFRACOST_API_KEY=${{ secrets.INFRACOST_API_KEY }}
           cd ${TF_ROOT}
           infracost breakdown --path=. \
-                              --terraform-var-file=${{ inputs.terraform-var-file }} \
-                              --usage-file ${{ inputs.usage-file }} \
+                              --terraform-var-file=./.env/${{ github.event.inputs.env || 'dev' }}/terraform.tfvars \
+                              --usage-file ./.env/${{ github.event.inputs.env || 'dev' }}/infracost-usage.yml \
                               --format=json \
                               --out-file=/temp/infracost.json
 
