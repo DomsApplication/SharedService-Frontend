@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: DomsApplication/SharedService-Frontend/.github/actions/terraform-infracost.yml@main
+    uses: DomsApplication/SharedService-Frontend/.github/workflows/actions/terraform-infracost.yml@main
     with:
       env: ${{ github.event.inputs.environment }}
       working-directory: ./terraform/frontend
@@ -31,7 +31,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    uses: DomsApplication/SharedService-Frontend/.github/actions/terraform.yml@main
+    uses: DomsApplication/SharedService-Frontend/.github/workflows/actions/terraform.yml@main
     with:
       working-directory: ./terraform/frontend
       apply-branch: main
