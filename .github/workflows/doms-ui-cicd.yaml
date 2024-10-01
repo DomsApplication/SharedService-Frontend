@@ -11,14 +11,17 @@ on:
   workflow_dispatch:
     inputs:
       env:
+        description: "this is environment"
         required: true
         type: environment
         default: 'dev'
       working-directory:
+        description: "specify the working directory"
         required: false
         type: string
         default: '.'
       build-dir:
+        description: "build directory"
         required: true
         type: string
         default: dist
