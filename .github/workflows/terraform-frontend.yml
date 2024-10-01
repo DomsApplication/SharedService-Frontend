@@ -145,13 +145,13 @@ jobs:
           echo deploy_env: ${{github.event.inputs.environment }}
           echo branch/tag name: ${{ github.ref_name }}
           echo sts get-caller-identity
-          echo ROLE_TO_ASSUME: ${{ secret.ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 \g'
-          echo TERRAFORM_ROLE_TO_ASSUME: ${{ secret.TERRAFORM_ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 \g'
+          echo ROLE_TO_ASSUME: ${{ secrets.ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 \g'
+          echo TERRAFORM_ROLE_TO_ASSUME: ${{ secrets.TERRAFORM_ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 \g'
 
       - name: Create json file from github secrets
         uses: jsdaniell/create-json@v1.2.3
         with: 
-          name: "secret.json"
+          name: "secrets.json"
           json: ${{ secrets.SECRET_VALUE }}
           dir: ${{ inputs.working-directory }}
 
@@ -160,7 +160,7 @@ jobs:
         run: | 
           # passes a NPM_TOKEN which has access to private repo as client app doesn't pass such credential in when calling tf composite module.
           # credit: https://github.com/hashicorp/setup-terraform/issues/33
-          git config --global url."https://oauth2:${{ secret.NPM_TOKEN }}@github.com".insteadOf https://github.com
+          git config --global url."https://oauth2:${{ secrets.NPM_TOKEN }}@github.com".insteadOf https://github.com
           rm -rf .trraform
           terraform init -backend-config='./.env/${{ github.event.inputs.environment || 'dev' }}/backend.tfvars' -upgrade=true -input=false
 
@@ -171,7 +171,7 @@ jobs:
           export TF_VAR_deploy_repo=${DEPLOY_REPO,,}
           export TF_VAR_deploy_env=${DEPLOY_ENV,,}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
-          export TF_VAR_pipeline_token=${{ secret.PIPELINE_TOKEN }}
+          export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
           terraform plan -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
 
       - name: Terraform Apply
@@ -182,7 +182,7 @@ jobs:
           export TF_VAR_deploy_repo=${DEPLOY_REPO,,}
           export TF_VAR_deploy_env=${DEPLOY_ENV,,}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
-          export TF_VAR_pipeline_token=${{ secret.PIPELINE_TOKEN }}
+          export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
           terraform apply -auto-approve -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
 
       - name: Terraform Destroy
@@ -193,6 +193,6 @@ jobs:
           export TF_VAR_deploy_repo=${DEPLOY_REPO,,}
           export TF_VAR_deploy_env=${DEPLOY_ENV,,}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
-          export TF_VAR_pipeline_token=${{ secret.PIPELINE_TOKEN }}
+          export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
           terraform destroy -auto-approve -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
    
