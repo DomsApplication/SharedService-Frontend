@@ -61,9 +61,9 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423
+        uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.0
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+          egress-policy: audit
 
       - name: Checkout Code
         uses: actions/checkout@v3
