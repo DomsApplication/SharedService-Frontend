@@ -145,7 +145,7 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
 
     enabled             = true
     is_ipv6_enabled     = true
-    aliases             = ["${var.stack_name}-${var.deploy_env}.amazon.com"]
+    #aliases             = ["${var.stack_name}-${var.deploy_env}.amazon.com"]
     comment             = "CDN for ${var.product}"  
     default_root_object = "index.html"
 
@@ -186,8 +186,9 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
    }
 
     viewer_certificate {
-        acm_certificate_arn       = aws_acm_certificate.cert.arn
-        ssl_support_method        = "sni-only"
+        cloudfront_default_certificate = true
+        #acm_certificate_arn       = aws_acm_certificate.cert.arn
+        #ssl_support_method        = "sni-only"
         minimum_protocol_version  = "TLSv1.2_2021"
     }
 
