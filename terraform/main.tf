@@ -7,7 +7,7 @@ terraform {
         source = "hashicorp/aws"
         version = "4.45.0"
     }
-    github = {
+    github = {  
         source = "integrations/github"
         version = "5.23.0"
     }
@@ -337,4 +337,15 @@ resource "aws_acm_certificate" "cert" {
   tags = {
     Name = "${var.stack_name}-${var.deploy_env}-cert"
   }
+}
+
+
+########################################################################
+# Gitub Action secret: set github action secret for CloudFront Distribution Id. 
+########################################################################
+resource "github_repository_secret" "cloudfront_distribution_id" {
+  repository      = var.deploy_repo
+  environment     = var.deploy_env
+  secret_name     = "CLOUDFRONT_DISTRIBUTION_ID"
+  plaintext_value = aws_cloudfront_distribution.cf_distribution.id
 }
