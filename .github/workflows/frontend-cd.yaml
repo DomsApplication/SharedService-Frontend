@@ -24,7 +24,7 @@ on:
         description: "build directory"
         required: true
         type: string
-        default: dist
+        default: './frontend/build'
 
 
 #  pull_request:
@@ -116,7 +116,7 @@ jobs:
       - name: Zip the code and deploy to s3
         run: |
           cd ${{ inputs.working-directory }}
-          aws s3 sync ./${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}
+          aws s3 sync ${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}
 
       - name: Invalidate cloudFront cache
         run: |
@@ -151,5 +151,5 @@ jobs:
         if: env.CLOUDFRONT_INVALIDATION_COMPLETED == 'true'
         run: |
           cd ${{ inputs.working-directory }}
-          aws s3 sync --delete ./${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}
+          aws s3 sync --delete ${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}
 
