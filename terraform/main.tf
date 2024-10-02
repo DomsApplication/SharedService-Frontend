@@ -33,7 +33,7 @@ provider "aws" {
 
 provider "github" {
   token = var.pipeline_token
-  owner = "Shavika"
+  owner = var.github_owner
 }
 
 ########################################################################
