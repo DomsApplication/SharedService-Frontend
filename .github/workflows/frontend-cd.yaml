@@ -5,7 +5,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Frontend Deployment
+name: 1. Frontend Deployment
 
 on:
   workflow_dispatch:

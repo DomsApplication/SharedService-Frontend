@@ -1,4 +1,4 @@
-name: Terraform frontend provision
+name: 2. Terraform frontend provision
 
 on:
   workflow_dispatch:
