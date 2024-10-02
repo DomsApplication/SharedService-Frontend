@@ -10,6 +10,11 @@ variable "stack_name" {
   default = "shavika"
 }
 
+variable "github_owner" {
+    description = "github repository owner"
+    type = string
+}
+
 variable "deploy_env" {
     description = "deployment environment"
     type = string

@@ -195,6 +195,7 @@ jobs:
 
       - name: Print debug info
         run: |
+          echo github owner: ${{  github.repository_owner }}
           echo github actor: ${{  github.actor }}
           echo environment: ${{ github.event.inputs.env }}
           echo working-directory: ${{ inputs.working-directory }}
@@ -226,7 +227,8 @@ jobs:
         id: plan
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
-          export TF_VAR_deploy_repo=${{ github.repository }}
+          export TF_VAR_github_owner=${{ github.repository_owner }}
+          export TF_VAR_deploy_repo=${{ github.event.repository.name }}
           export TF_VAR_deploy_env=${{ github.event.inputs.env }}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
           export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
@@ -237,7 +239,8 @@ jobs:
         id: apply
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
-          export TF_VAR_deploy_repo=${{ github.repository }}
+          export TF_VAR_github_owner=${{ github.repository_owner }}
+          export TF_VAR_deploy_repo=${{ github.event.repository.name }}
           export TF_VAR_deploy_env=${{ github.event.inputs.env }}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
           export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
@@ -248,7 +251,8 @@ jobs:
         id: destroy
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
-          export TF_VAR_deploy_repo=${{ github.repository }}
+          export TF_VAR_github_owner=${{ github.repository_owner }}
+          export TF_VAR_deploy_repo=${{ github.event.repository.name }}
           export TF_VAR_deploy_env=${{ github.event.inputs.env }}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
           export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
