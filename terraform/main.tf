@@ -153,9 +153,10 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
         allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
         cached_methods = ["GET", "HEAD"]
         target_origin_id = "${var.product}-ui-s3origin"
-        cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6" # CachingOptimized
-        origin_request_policy_id   = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf" # CORS-S3Origin
-        response_headers_policy_id = "67f7725c-6f97-4210-82d7-5512b31e9d03" # SecurityHeadersPolicy
+        response_headers_policy_id = var.is_policy_enabled ? aws_cloudfront_response_headers_policy.security_headers_policy[0].id : null 
+        #cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6" # CachingOptimized
+        #origin_request_policy_id   = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf" # CORS-S3Origin
+        #response_headers_policy_id = "67f7725c-6f97-4210-82d7-5512b31e9d03" # SecurityHeadersPolicy
 
         forwarded_values {
             query_string = false
@@ -163,6 +164,11 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
             cookies {
                 forward = "none"
             }
+        }
+
+        function_association {
+          event_type = "viewer-request"
+          function_arn = aws_cloudfront_function.static_site.arn
         }
 
         viewer_protocol_policy = "redirect-to-https"
@@ -213,6 +219,69 @@ resource "aws_cloudfront_origin_access_control" "origin_access_control" {
     origin_access_control_origin_type = "s3"
     signing_behavior                  = "always"
     signing_protocol                  = "sigv4"
+}
+
+########################################################################
+# aws CloudFront: This is distribution response headers policy 
+########################################################################
+resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
+  count = var.is_policy_enabled ? 1 : 0
+  name = "${var.stack_name}-${var.product}-${var.deploy_env}-security-headers-policy"
+  comment = "${var.stack_name}-${var.product}-${var.deploy_env}-security-headers-policy"
+  
+  custom_headers_config {
+    items {
+      header = "Cache-Control"
+      override = true
+      value = var.cache-control
+    }
+    items {
+      header = "Pragma"
+      override = true
+      value = "no-cache"
+    }
+  }
+
+  security_headers_config {
+    content_type_options {
+      override = true
+    }
+    frame_options {
+      frame_option = "SAMEORIGIN"
+      override = true   
+    }
+    referrer_policy {
+      referrer_policy = "static-origin-when-cross-origin"
+      override = true
+    }
+    xss_protection {
+      mode_block = true
+      protection = true
+      override = true
+    }
+    strict_transport_security {
+      access_control_max_age_sec = var.access_control_max_age_sec
+      override = true
+    }
+    content_security_policy {
+      content_security_policy = var.content_security_policy
+      override = true
+    }
+  }
+
+}
+
+########################################################################
+# aws CloudFront function
+########################################################################
+resource "aws_cloudfront_function" "static_site" {
+  name    = "${replace(var.stack_name, ".", "_")}_index_rewrite"
+  runtime = "cloudfront-js-1.0"
+  comment = "index.html rewrite for S3 origin"
+  publish = true
+  code    = templatefile("${path.module}/function.js.tftpl", {
+    domain = var.stack_name, subdomains = var.subdomains
+  })
 }
 
 ########################################################################
