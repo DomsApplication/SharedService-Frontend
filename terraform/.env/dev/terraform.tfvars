@@ -8,7 +8,7 @@ customer_name       = "development"
 revenue_type        = "non-rev"
 requestor_name      = "mahesha"
 
-content_security_policy = "default-src 'self' *.auth0.com/, *.amazon.com/ https://fonts.googleapis.com/ https://fonts.gstatic.com/ https://cdn.jsdelivr/net/ 'unsafe-inline' 'unsafe-eval' blob: data:;"
+content_security_policy = "default-src 'self' *.auth0.com/ *.amazon.com/ https://fonts.googleapis.com/ https://fonts.gstatic.com/ https://cdn.jsdelivr.net/ 'unsafe-inline' 'unsafe-eval' blob: data:; frame-src 'self' *.amazon.com/; frame-ancestors 'self' *.amazon.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
 
 cache_ttl = {
     min = 0
