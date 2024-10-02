@@ -8,8 +8,6 @@ customer_name       = "development"
 revenue_type        = "non-rev"
 requestor_name      = "mahesha"
 
-cache_ttl = {
-    min = 0
-    default = 14400
-    max = 86400
-}
+cache_ttl_min       = 0
+cache_ttl_default   = 14400
+cache_ttl_max       = 86400
