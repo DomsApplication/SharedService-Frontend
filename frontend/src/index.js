@@ -11,7 +11,6 @@ import { BrowserRouter } from "react-router-dom";
 import ScrollTop from "./component/scroll-top.js";
 import Auth0ConfigProvider from "./utils/Auth0ConfigProvider";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { ToastProvider } from "./component/toastContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
