@@ -8,8 +8,8 @@ terraform {
         version = "4.45.0"
     }
     github = {  
-        source = "integrations/github"
-        version = "5.23.0"
+        source = "hashicorp/github"
+        version = "~> 6.3.0" # Check for the latest version
     }
   }
   required_version = ">=1.5.0"
