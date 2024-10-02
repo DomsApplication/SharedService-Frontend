@@ -90,3 +90,32 @@ variable "html_403" {
   type = string
   default = "/index.html"
 }
+
+variable "is_policy_enabled" {
+  description = "This is clound front response header policy"
+  type = bool
+  default = true
+}
+
+variable "cache-control" {
+  description = "Added Cache-Control"
+  type = string
+  default = "no-cache, no-store"
+}
+
+variable "access_control_max_age_sec" {
+  description = "Access control maximum age"
+  type = number
+  default = 31536000
+}
+
+variable "content_security_policy" {
+  description = "Added content security policy"
+  type = string
+}
+
+variable "subdomains" {
+  description = "List of subdomains to setup. Everything here will be redirected to the apex domain"
+  type = list(any)
+  default = []
+}
