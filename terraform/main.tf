@@ -251,7 +251,7 @@ resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
       override = true   
     }
     referrer_policy {
-      referrer_policy = "static-origin-when-cross-origin"
+      referrer_policy = "strict-origin-when-cross-origin"
       override = true
     }
     xss_protection {
