@@ -101,7 +101,7 @@ jobs:
     env:
       ROLE_TO_ASSUME: ${{ secrets.ROLE_TO_ASSUME }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      DEPLOY_REPO: ${{ github.event.repository.name }}
+      DEPLOY_REPO: ${{ github.repository }}
       DEPLOY_ENV: ${{ github.event.inputs.environment || 'dev' }}
 
     # dependabot PRs do not need to run this flow as GitHub prohibits dependabot PRs to access workflows
@@ -226,7 +226,7 @@ jobs:
         id: plan
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
-          export TF_VAR_deploy_repo=${{github.event.repository.name }}
+          export TF_VAR_deploy_repo=${{ github.repository }}
           export TF_VAR_deploy_env=${{ github.event.inputs.env }}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
           export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
@@ -237,7 +237,7 @@ jobs:
         id: apply
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
-          export TF_VAR_deploy_repo=${{github.event.repository.name }}
+          export TF_VAR_deploy_repo=${{ github.repository }}
           export TF_VAR_deploy_env=${{ github.event.inputs.env }}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
           export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
@@ -248,7 +248,7 @@ jobs:
         id: destroy
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
-          export TF_VAR_deploy_repo=${{github.event.repository.name }}
+          export TF_VAR_deploy_repo=${{ github.repository }}
           export TF_VAR_deploy_env=${{ github.event.inputs.env }}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
           export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
