@@ -349,3 +349,10 @@ resource "github_actions_environment_secret" "cloudfront_distribution_id" {
   secret_name     = "CLOUDFRONT_DISTRIBUTION_ID"
   plaintext_value = aws_cloudfront_distribution.cf_distribution.id
 }
+
+resource "github_actions_environment_secret" "static_web_page_id" {
+  repository      = var.deploy_repo
+  environment     = var.deploy_env
+  secret_name     = "S3_BUCKET_NAME"
+  plaintext_value = aws_s3_bucket.static_web_page.id
+}
