@@ -343,7 +343,7 @@ resource "aws_acm_certificate" "cert" {
 ########################################################################
 # Gitub Action secret: set github action secret for CloudFront Distribution Id. 
 ########################################################################
-resource "github_repository_secret" "cloudfront_distribution_id" {
+resource "github_actions_environment_secret" "cloudfront_distribution_id" {
   repository      = var.deploy_repo
   environment     = var.deploy_env
   secret_name     = "CLOUDFRONT_DISTRIBUTION_ID"
