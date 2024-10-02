@@ -16,6 +16,16 @@ variable "deploy_env" {
     default = "dev"
 }
 
+variable "deploy_user" {
+    description = "deployment user"
+    type = string
+}
+
+variable "deploy_repo" {
+    description = "deployment github repository"
+    type = string
+}
+
 variable "product" {
     description = "project name tag"
     type = string

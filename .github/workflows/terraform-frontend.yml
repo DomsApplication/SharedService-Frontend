@@ -196,11 +196,11 @@ jobs:
       - name: Print debug info
         run: |
           echo github actor: ${{  github.actor }}
-          echo environment: ${{ github.event.inputs.environment }}
+          echo environment: ${{ github.event.inputs.env }}
           echo working-directory: ${{ inputs.working-directory }}
           echo repository: ${{ github.repository }}
-          echo deploy_repo: ${{github.event.reposiotry.name }}
-          echo deploy_env: ${{github.event.inputs.environment }}
+          echo deploy_repo: ${{ github.event.repository.name }}
+          echo deploy_env: ${{ github.event.inputs.env }}
           echo branch/tag name: ${{ github.ref_name }}
           echo sts get-caller-identity
           echo ROLE_TO_ASSUME: ${{ secrets.ROLE_TO_ASSUME }} | sed -e 's/\(.\)/\1 /g'
@@ -226,8 +226,8 @@ jobs:
         id: plan
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
-          export TF_VAR_deploy_repo=${DEPLOY_REPO,,}
-          export TF_VAR_deploy_env=${DEPLOY_ENV,,}
+          export TF_VAR_deploy_repo=${{github.event.repository.name }}
+          export TF_VAR_deploy_env=${{ github.event.inputs.env }}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
           export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
           terraform plan -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
@@ -237,8 +237,8 @@ jobs:
         id: apply
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
-          export TF_VAR_deploy_repo=${DEPLOY_REPO,,}
-          export TF_VAR_deploy_env=${DEPLOY_ENV,,}
+          export TF_VAR_deploy_repo=${{github.event.repository.name }}
+          export TF_VAR_deploy_env=${{ github.event.inputs.env }}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
           export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
           terraform apply -auto-approve -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
@@ -248,8 +248,8 @@ jobs:
         id: destroy
         run: |
           # Convert repo and env to lower case and pass to terraform as env variables
-          export TF_VAR_deploy_repo=${DEPLOY_REPO,,}
-          export TF_VAR_deploy_env=${DEPLOY_ENV,,}
+          export TF_VAR_deploy_repo=${{github.event.repository.name }}
+          export TF_VAR_deploy_env=${{ github.event.inputs.env }}
           export TF_VAR_deploy_user=${GITHUB_ACTOR}
           export TF_VAR_pipeline_token=${{ secrets.PIPELINE_TOKEN }}
           terraform destroy -auto-approve -input=false -var-file=.env/${{ github.event.inputs.environment || 'dev' }}/terraform.tfvars
