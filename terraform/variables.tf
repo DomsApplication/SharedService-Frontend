@@ -52,17 +52,41 @@ variable "pipeline_token" {
   default = ""
 }
 
-variable "cache_ttl_min" {
-  description = "Cloudfront default cache ttl min values"
-  type = number
+variable "cache_ttl" {
+  description = "Cloudfront default cache ttl values"
+  type = object({
+    min = number
+    default = number
+    max = number 
+  })
+  default = {
+    min = 0
+    default = 3600
+    max = 86400
+  }
 }
 
-variable "cache_ttl_default" {
-  description = "Cloudfront default cache ttl default values"
-  type = number
+variable "block_ofac_countries" {
+  description = "Whether or not block OFAC sanctioned countries"
+  type = bool
+  default = false
 }
 
-variable "cache_ttl_max" {
-  description = "Cloudfront default cache ttl max values"
-  type = number
+variable "ofac_countries" {
+    description = "OFAC countires list"
+    type = list
+    default = ["BY", "CU", "IR", "KP", "RU", "SY", "US", "CA", "GB", "DE", "IN"]
+  
+}
+
+variable "html_404" {
+  description = "Pathto 404 HTML page"
+  type = string
+  default = "/404.html"
+}
+
+variable "html_403" {
+  description = "Pathto 403 HTML page"
+  type = string
+  default = "/index.html"
 }
