@@ -43,8 +43,8 @@ const DataTable = ({ columns, rows }) => {
           value.toString().toLowerCase().includes(searchQuery.toLowerCase())
         )
       )
-    );
-  }, [rows, searchQuery]);*/
+    ); */
+  }, []);
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
