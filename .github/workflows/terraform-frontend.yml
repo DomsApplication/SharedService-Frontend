@@ -101,7 +101,7 @@ jobs:
     env:
       ROLE_TO_ASSUME: ${{ secrets.ROLE_TO_ASSUME }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      DEPLOY_REPO: ${{ github.event.repository.name }}
+      DEPLOY_REPO: ${{ github.repository }}
       DEPLOY_ENV: ${{ github.event.inputs.environment || 'dev' }}
 
     # dependabot PRs do not need to run this flow as GitHub prohibits dependabot PRs to access workflows
