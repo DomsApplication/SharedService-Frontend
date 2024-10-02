@@ -186,8 +186,9 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
    }
 
     viewer_certificate {
-        cloudfront_default_certificate = true
-        minimum_protocol_version        = "TLSv1.2_2021"
+        acm_certificate_arn       = aws_acm_certificate.cert.arn
+        ssl_support_method        = "sni-only"
+        minimum_protocol_version  = "TLSv1.2_2021"
     }
 
     custom_error_response {
@@ -320,3 +321,19 @@ data "aws_iam_policy_document" "read_static_web_page_bucket" {
     }
   }
 } 
+
+########################################################################
+# AWS Certificate Manager: generate a certification. 
+########################################################################
+resource "aws_acm_certificate" "cert" {
+  domain_name       = "${var.stack_name}-${var.deploy_env}.amazon.com"
+  validation_method = "DNS"
+
+  subject_alternative_names = [
+    "*.${var.stack_name}-${var.deploy_env}.amazon.com"
+  ]
+
+  tags = {
+    Name = "${var.stack_name}-${var.deploy_env}-cert"
+  }
+}
