@@ -19,7 +19,7 @@ on:
         description: "specify the working directory"
         required: false
         type: string
-        default: '.'
+        default: './frontend'
       build-dir:
         description: "build directory"
         required: true
@@ -91,13 +91,17 @@ jobs:
           cache-dependency-path: '${{ inputs.working-directory }}/package-lock.json'
           
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd ${{ inputs.working-directory }}
+          npm install
         env:
           CI: true
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           
       - name: Generate build
-        run: npm run build:${{ inputs.env || 'dev' }}
+        run: |
+          cd ${{ inputs.working-directory }}
+          npm run build:${{ inputs.env || 'dev' }}
         #run: npm run build
         #run: yarn build-${{ inputs.env || 'dev' }}
         #run: yarn build
@@ -105,16 +109,18 @@ jobs:
       - name: build path
         run: |
           pwd \
-          && cd ${{ inputs.build-dir }} \
+          && cd ${{ inputs.working-directory }} \
           && echo ************ BUILD PATH **************** \
           && ls -l
 
       - name: Zip the code and deploy to s3
         run: |
+          cd ${{ inputs.working-directory }}
           aws s3 sync ./${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}
 
       - name: Invalidate cloudFront cache
         run: |
+          cd ${{ inputs.working-directory }}
           CLOUDFRONT_INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*" | jq -e -n -r 'input.Invalidation.Id')
           echo "Invalidation Id is: $CLOUDFRONT_INVALIDATION_ID"
           echo "CLOUDFRONT_INVALIDATION_ID=$CLOUDFRONT_INVALIDATION_ID" >> $GITHUB_ENV
@@ -122,6 +128,7 @@ jobs:
       - name: Wait for completion of cloudfront invalidation
         id: wait-for-cache-invalidation-completed
         run: |
+          cd ${{ inputs.working-directory }}
           set +e
           WAIT_FOR_INVALIDATION_SECONDS=180
           timeout "$WAIT_FOR_INVALIDATION_SECONDS" /bin/bash -s <<SCRIPT
@@ -143,5 +150,6 @@ jobs:
       - name: Delete previous deployment artifacts
         if: env.CLOUDFRONT_INVALIDATION_COMPLETED == 'true'
         run: |
+          cd ${{ inputs.working-directory }}
           aws s3 sync --delete ./${{ inputs.build-dir }} s3://${{ secrets.S3_BUCKET_NAME }}
 
