@@ -1,23 +1,30 @@
+import React, { useState } from "react";
 import HeadLayout from "./headerLayout.js";
-import SliderLayout from "./sliderLayout.js";
-import { useProSidebar } from "react-pro-sidebar";
+import SidebarLayout from "./sidebarLayout.js";
 import { Outlet } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Copyright from "../pages/Copyright.js";
 
 const MainLayout = () => {
-  const { collapseSidebar } = useProSidebar();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const toggle = () => {
-    collapseSidebar();
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
+  const handleMenuSelect = () => {
+    setDrawerOpen(false); // Close the sidebar when a menu is selected
   };
 
   return (
     <>
-      <SliderLayout toggle={toggle} />
-
+      <HeadLayout toggle={handleDrawerToggle}></HeadLayout>
+      <SidebarLayout
+        open={drawerOpen}
+        onClose={handleDrawerToggle}
+        onMenuSelect={handleMenuSelect}
+      />
       <div style={{ width: "100%" }}>
-        <HeadLayout toggle={toggle}></HeadLayout>
         <Box
           component="main"
           sx={{
@@ -30,7 +37,7 @@ const MainLayout = () => {
             pt: "70px",
             pl: "20px",
             pr: "20px",
-            pb: "20px"
+            pb: "20px",
           }}
         >
           <Outlet />
