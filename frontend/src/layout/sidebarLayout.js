@@ -88,14 +88,12 @@ function SidebarLayout({ open, onClose, onMenuSelect }) {
   const [userPiture, setUserPiture] = React.useState(null);
   const [userName, setUserName] = React.useState(null);
   const [userEmail, setUserEmail] = React.useState(null);
-  const [userInfo, setUserInfo] = React.useState(null);
   const [adminOpen, setAdminOpen] = useState(false);
 
   React.useEffect(() => {
     setUserPiture(tenantContext.userInfo.picture);
     setUserName(tenantContext.userInfo.name);
     setUserEmail(tenantContext.userInfo.email);
-    setUserInfo(tenantContext.userInfo);
   }, [tenantContext.userInfo]);
 
   const handleLogout = () => {
