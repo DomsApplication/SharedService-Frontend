@@ -14,7 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import AppsIcon from "@mui/icons-material/Apps";
+import BusinessIcon from '@mui/icons-material/Business';
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import { Person } from "@mui/icons-material";
@@ -39,10 +39,17 @@ const toolbarStyle = {
   minHeight: "50px",
 };
 
+const Logo = styled("img")(({ theme }) => ({
+  height: 40,
+  marginRight: 16,
+  cursor: "pointer",
+}));
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
+  border: "1px solid lightgray", // Add border with dark gray color
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
@@ -115,9 +122,10 @@ function HeadLayout({ toggle }) {
       PaperProps={{
         elevation: 0,
         sx: {
-          backgroundColor: "#1976d2",
-          color: "#fff",
+          backgroundColor: "#ffffff",
+          color: "#000",
           overflow: "visible",
+          width: "20%",
           filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
           mt: 1.5,
           "& .MuiAvatar-root": {
@@ -135,7 +143,7 @@ function HeadLayout({ toggle }) {
             width: 10,
             height: 10,
             bgcolor: "background.paper",
-            backgroundColor: "#1976d2",
+            backgroundColor: "#ffffff",
             transform: "translateY(-50%) rotate(45deg)",
             zIndex: 0,
           },
@@ -309,7 +317,7 @@ function HeadLayout({ toggle }) {
           <Avatar
             className="navbar.avatar-container center"
             sx={{ width: 36, height: 36, margin: "auto" }}
-            alt="Remy Sharp"
+            alt="User Icon"
             src={userPiture}
           />
         </IconButton>
@@ -323,7 +331,7 @@ function HeadLayout({ toggle }) {
       open={openUserInfoWindow}
       onClose={handleUserInfoWindowClose}
       fullWidth={false}
-      maxWidth={'xs'}
+      maxWidth={"xs"}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -340,21 +348,108 @@ function HeadLayout({ toggle }) {
       <DialogContent>
         <DialogContentText>
           <Paper elevation={0}>
-          <Grid container spacing={0} style={{ flexGrow: 4, paddingTop: "5px" }}>
-            <Grid item xs={3} style={{paddingTop: "3px", textAlign: "left"}}>Name: </Grid>
-            <Grid item xs={9} style={{paddingTop: "3px", textAlign: "left"}}><Typography><b>{userName}</b></Typography></Grid>
-            <Grid item xs={3} style={{paddingTop: "3px", textAlign: "left"}}>Email: </Grid>
-            <Grid item xs={9} style={{paddingTop: "3px", textAlign: "left"}}><Typography><b>{userEmail}</b></Typography></Grid>
-            <Grid item xs={3} style={{paddingTop: "3px", textAlign: "left"}}>Nick Name: </Grid>
-            <Grid item xs={9} style={{paddingTop: "3px", textAlign: "left"}}><Typography><b>{userInfo != null ? userInfo.nickname : ''}</b></Typography></Grid>
-            <Grid item xs={3} style={{paddingTop: "3px", textAlign: "left"}}>Last login:</Grid>
-            <Grid item xs={9} style={{paddingTop: "3px", textAlign: "left"}}><Typography><b>{userInfo != null ? userInfo.last_login : ''}</b></Typography></Grid>
-            <Grid item xs={3} style={{paddingTop: "3px", textAlign: "left"}}>Login count:</Grid>
-            <Grid item xs={9} style={{paddingTop: "3px", textAlign: "left"}}><Typography><b>{userInfo != null ? userInfo.logins_count : ''}</b></Typography></Grid>
-            <Grid item xs={3} style={{paddingTop: "3px", textAlign: "left"}}>User Created:</Grid>
-            <Grid item xs={9} style={{paddingTop: "3px", textAlign: "left"}}><Typography><b>{userInfo != null ? userInfo.created_at : ''}</b></Typography></Grid>
-
-          </Grid>
+            <Grid
+              container
+              spacing={0}
+              style={{ flexGrow: 4, paddingTop: "5px" }}
+            >
+              <Grid
+                item
+                xs={3}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                Name:{" "}
+              </Grid>
+              <Grid
+                item
+                xs={9}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                <Typography>
+                  <b>{userName}</b>
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={3}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                Email:{" "}
+              </Grid>
+              <Grid
+                item
+                xs={9}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                <Typography>
+                  <b>{userEmail}</b>
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={3}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                Nick Name:{" "}
+              </Grid>
+              <Grid
+                item
+                xs={9}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                <Typography>
+                  <b>{userInfo != null ? userInfo.nickname : ""}</b>
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={3}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                Last login:
+              </Grid>
+              <Grid
+                item
+                xs={9}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                <Typography>
+                  <b>{userInfo != null ? userInfo.last_login : ""}</b>
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={3}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                Login count:
+              </Grid>
+              <Grid
+                item
+                xs={9}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                <Typography>
+                  <b>{userInfo != null ? userInfo.logins_count : ""}</b>
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={3}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                User Created:
+              </Grid>
+              <Grid
+                item
+                xs={9}
+                style={{ paddingTop: "3px", textAlign: "left" }}
+              >
+                <Typography>
+                  <b>{userInfo != null ? userInfo.created_at : ""}</b>
+                </Typography>
+              </Grid>
+            </Grid>
           </Paper>
         </DialogContentText>
       </DialogContent>
@@ -375,27 +470,17 @@ function HeadLayout({ toggle }) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" elevation={0}>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        style={{ backgroundColor: "white", color: "black" }}
+      >
         <Toolbar style={toolbarStyle}>
-          {/** 3 line icon */}
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-            onClick={toggle}
-          >
-            <MenuIcon />
-          </IconButton>
+          <Logo src="/logo-250x250.png" alt="Company Logo" onClick={toggle} />
 
-          {/** Application Name */}
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            DOMS
-          </Typography>
-
-          <Tooltip title="Tenants" arrow>
-            <IconButton
+          <Tooltip title="Select Tenants" arrow>
+            <Button
+              variant="outlined"
               onClick={handleClick}
               size="large"
               edge="start"
@@ -405,10 +490,21 @@ function HeadLayout({ toggle }) {
               aria-controls={isAppServiceOpen ? appServiceId : undefined}
               aria-haspopup="true"
               aria-expanded={isAppServiceOpen ? "true" : undefined}
+              startIcon={<BusinessIcon />}
             >
-              <AppsIcon />
-            </IconButton>
+
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            I am Villan
+          </Typography>
+
+            </Button>
           </Tooltip>
+
+
+          {/** Application Name */}
+          <Typography variant="h9" component="div" sx={{ flexGrow: 1 }}>
+            &nbsp;
+          </Typography>
 
           {/** Search button */}
           <Search>

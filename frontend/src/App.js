@@ -74,7 +74,7 @@ function App() {
     if (isAuthenticated) {
       getUserDetails();
     }
-  }, [getAccessTokenSilently, getIdTokenClaims, isAuthenticated, user, navigate]);
+  }, [getAccessTokenSilently, isAuthenticated, user, navigate]);
 
   return (
     <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
