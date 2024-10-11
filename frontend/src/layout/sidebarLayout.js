@@ -32,20 +32,20 @@ const SidebarContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1), // Add padding for better spacing
 
   [theme.breakpoints.up("lg")]: {
-    width: 270,
+    width: 280,
     height: '100vh',
   },
   [theme.breakpoints.down("lg")]: {
-    width: 240,
+    width: 250,
     height: '100vh',
   },
   [theme.breakpoints.down("md")]: {
-    width: 240,
+    width: 250,
     height: '95vh', 
     minHeight: '90vh',
   },
   [theme.breakpoints.down("sm")]: {
-    width: 240,     
+    width: 250,     
     height: '95vh',
     minHeight: '90vh',
   },
