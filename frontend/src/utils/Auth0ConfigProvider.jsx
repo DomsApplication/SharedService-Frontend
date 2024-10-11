@@ -29,7 +29,7 @@ function Auth0ConfigProvider({children}) {
         setState({
             loading: false,
             auth0ClientId: process.env.REACT_APP_AUTH0_SPA_CLIENT_ID,
-            auth0Audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+            auth0Audience: process.env.REACT_APP_AUTH0_AUDIENCE,    
             auth0Domain: process.env.REACT_APP_AUTH0_DOMAIN,
         });
     }, []);

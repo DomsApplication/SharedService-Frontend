@@ -117,7 +117,7 @@ function HeadLayout({ toggle }) {
           backgroundColor: "#ffffff",
           color: "#000",
           overflow: "visible",
-          width: "20%",
+          width: { xs: "90%", sm: "60%", md: "40%", lg: "20%" }, // Responsive width adjustments
           filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
           mt: 1.5,
           "& .MuiAvatar-root": {
@@ -145,20 +145,28 @@ function HeadLayout({ toggle }) {
       anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
     >
       <MenuItem onClick={handleClose}>
-        <Avatar sx={{ width: 32, height: 32, bgcolor: "#ff9900" }}>A</Avatar>{" "}
-        Application Group
+        <Avatar sx={{ width: 32, height: 32, bgcolor: "#ff9900" }}>A</Avatar>
+        <Typography variant="body2" noWrap sx={{ flexGrow: 1 }}>
+          Application Group
+        </Typography>
       </MenuItem>
       <MenuItem onClick={handleClose}>
-        <Avatar sx={{ width: 32, height: 32, bgcolor: "#4499e4" }}>C</Avatar>{" "}
-        Configuration
+        <Avatar sx={{ width: 32, height: 32, bgcolor: "#4499e4" }}>C</Avatar>
+        <Typography variant="body2" noWrap sx={{ flexGrow: 1 }}>
+          Configuration
+        </Typography>
       </MenuItem>
       <MenuItem onClick={handleClose}>
-        <Avatar sx={{ width: 32, height: 32, bgcolor: "#14ac00" }}>D</Avatar>{" "}
-        Data Repository
+        <Avatar sx={{ width: 32, height: 32, bgcolor: "#14ac00" }}>D</Avatar>
+        <Typography variant="body2" noWrap sx={{ flexGrow: 1 }}>
+          Data Repository
+        </Typography>
       </MenuItem>
       <MenuItem onClick={handleClose}>
-        <Avatar sx={{ width: 32, height: 32, bgcolor: "#87aca0" }}>E</Avatar>{" "}
-        Employee
+        <Avatar sx={{ width: 32, height: 32, bgcolor: "#87aca0" }}>E</Avatar>
+        <Typography variant="body2" noWrap sx={{ flexGrow: 1 }}>
+          Employee
+        </Typography>
       </MenuItem>
     </Menu>
   );
@@ -487,14 +495,19 @@ function HeadLayout({ toggle }) {
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              sx={{ mr: 0 }}
+              sx={{ mr: 0, minWidth: { xs: "auto", sm: "150px" } }} // Adjust button width based on screen size
               aria-controls={isAppServiceOpen ? appServiceId : undefined}
               aria-haspopup="true"
               aria-expanded={isAppServiceOpen ? "true" : undefined}
               startIcon={<BusinessIcon />}
               endIcon={<KeyboardArrowDownIcon />}
             >
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <Typography
+                variant="h6"
+                component="div"
+                noWrap
+                sx={{ flexGrow: 1, fontSize: { xs: "1rem", sm: "1.25rem" } }}
+              >
                 I am Villan
               </Typography>
             </Button>

@@ -24,24 +24,31 @@ import { ExpandMore, ChevronRight, Close as CloseIcon, Logout } from "@mui/icons
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
 
-// Responsive styles for Sidebar container
 const SidebarContainer = styled(Box)(({ theme }) => ({
-  height: "100vh", // Full height
   display: "flex",
   flexDirection: "column",
+  overflowY: "auto",
+  height: '100vh',  // Full viewport height for better space utilization
+  padding: theme.spacing(1), // Add padding for better spacing
+
   [theme.breakpoints.up("lg")]: {
-    width: 300,
+    width: 270,   // Larger width for large screens
+    height: '100vh', // Full height for larger screens
   },
   [theme.breakpoints.down("lg")]: {
-    width: 260,
+    width: 240,
+    height: '100vh', // Full height for larger screens
   },
   [theme.breakpoints.down("md")]: {
-    width: 220,
+    width: 240,
+    height: '90vh',  // Full height for medium screens
+    minHeight: '95vh', // Minimum height for better spacing
   },
   [theme.breakpoints.down("sm")]: {
-    width: 200,
+    width: 240,     
+    height: '100vh', // Full height for smaller screens
+    minHeight: '95vh', // Minimum height for better spacing
   },
-  overflowY: "auto",
 }));
 
 const SidebarTop = styled("div")({
