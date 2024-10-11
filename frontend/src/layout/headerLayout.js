@@ -219,7 +219,7 @@ function HeadLayout({ toggle }) {
             <Button
               variant="outlined"
               onClick={handleClick}
-              size="small"
+              size="medium"
               edge="start"
               color="inherit"
               aria-label="open drawer"
@@ -231,14 +231,14 @@ function HeadLayout({ toggle }) {
               endIcon={<KeyboardArrowDownIcon />}
             >
               <Box sx={{ display: { xs: "none", sm: "flex", md: "flex" } }}>
-              <Typography
-                variant="h6"
-                component="div"
-                noWrap
-                sx={{ flexGrow: 1, fontSize: { xs: "1rem", sm: "1.25rem" } }}
-              >
-                I am Villan
-              </Typography>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  noWrap
+                  sx={{ flexGrow: 1, fontSize: { xs: "1rem", sm: "1rem" } }}
+                >
+                  I am Villan
+                </Typography>
               </Box>
             </Button>
           </Tooltip>

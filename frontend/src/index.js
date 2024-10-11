@@ -10,16 +10,19 @@ import { BrowserRouter } from "react-router-dom";
 import ScrollTop from "./component/scroll-top.js";
 import Auth0ConfigProvider from "./utils/Auth0ConfigProvider";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { SnackbarProvider } from "./component/snackbar/SnackbarContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-      <BrowserRouter basename="/">
+    <BrowserRouter basename="/">
+      <SnackbarProvider>
         <Auth0ConfigProvider OAuthProvider={Auth0Provider}>
-            <ScrollTop>
-              <App />
-            </ScrollTop>
+          <ScrollTop>
+            <App />
+          </ScrollTop>
         </Auth0ConfigProvider>
-      </BrowserRouter>
+      </SnackbarProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );

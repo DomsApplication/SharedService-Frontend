@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from "react";
 import { Auth0Provider } from "@auth0/auth0-react";
+import useSnackbar from "./../component/snackbar/useSnackbar";
 
 const onRedirectCallback = (appState) => {
     const url = appState && appState.returnTo ? appState.returnTo : window.location.pathname;
@@ -24,6 +25,7 @@ const providerConfig = {
 
 function Auth0ConfigProvider({children}) {
     const [state, setState] = useState({loading: true, auth0ClientId: null, auth0Audience: null, auth0Domain: null});
+    const showSnackbar = useSnackbar();
 
     useEffect(() => {
         setState({
@@ -44,12 +46,17 @@ function Auth0ConfigProvider({children}) {
         },
     };
 
+    const handleAuth0Error = (error) => {
+        console.error('Auth0 Error:', error);
+        showSnackbar(`Auth0 Error: ${error.message}`, 'error'); // Show error message in Snackbar
+    };
+
     if(state.loading) {
         return <div>Loading......</div>;
     }
 
     return (
-        <Auth0Provider {...updateProviderConfig} onRedirectCallback={onRedirectCallback}> 
+        <Auth0Provider {...updateProviderConfig} onRedirectCallback={onRedirectCallback} onError={handleAuth0Error}> 
             {children}
         </Auth0Provider>
     )
