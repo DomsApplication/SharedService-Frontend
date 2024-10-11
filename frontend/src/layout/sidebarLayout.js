@@ -23,6 +23,7 @@ import WebAssetIcon from "@mui/icons-material/WebAsset";
 import { ExpandMore, ChevronRight, Close as CloseIcon, Logout } from "@mui/icons-material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
+import { TenantContext } from "../App";
 
 // Responsive styles for Sidebar container
 const SidebarContainer = styled(Box)(({ theme }) => ({
@@ -84,8 +85,10 @@ const UserProfile = styled("div")({
 });
 
 function SidebarLayout({ open, onClose, onMenuSelect }) {
+  
   const { user, logout } = useAuth0();
   const [adminOpen, setAdminOpen] = useState(false);
+  const tenantContext = React.useContext(TenantContext);
 
   const handleLogout = () => {
     const returnToUri = window.location.origin;
@@ -214,7 +217,7 @@ function SidebarLayout({ open, onClose, onMenuSelect }) {
                 <Box display="flex" alignItems="center" width="100%">
                   <Avatar
                     alt="User Icon"
-                    src={user.picture}
+                    src={tenantContext.userPicture}
                     style={{ marginRight: 10, height: 36, width: 36 }}
                   />
                   <Box display="flex" flexDirection="column">
