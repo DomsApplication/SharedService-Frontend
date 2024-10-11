@@ -18,7 +18,7 @@ const providerConfig = {
     authorizationParams: {
         audience: null,
         redirect_uri: window.location.origin,
-        scope: 'reate:current_user_metadata read:current_user read:users read:user_idp_tokens read:clients read:client_keys read:client_credentials read:lient_summary email update:users update:users_app_metadata update:current_user_metadata update:clients update:password'
+        scope: 'openid profile read:current_user read:users read:user_idp_tokens read:clients read:client_keys read:client_summary email'
     },
 };
 

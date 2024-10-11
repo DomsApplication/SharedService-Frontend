@@ -34,7 +34,7 @@ function ChangePassword() {
       setAuth0userToken(response.data.access_token);
     };
     getToken();
-  }, [domain]);
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();

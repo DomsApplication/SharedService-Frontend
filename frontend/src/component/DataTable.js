@@ -32,19 +32,19 @@ const DataTable = ({ columns, rows }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
-  //const [filteredRows, setFilteredRows] = useState(rows);
+  const [filteredRows, setFilteredRows] = useState(rows);
   const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    /*setFilteredRows(
+    setFilteredRows(
       rows.filter((row) =>
         Object.values(row).some((value) =>
           value.toString().toLowerCase().includes(searchQuery.toLowerCase())
         )
       )
-    ); */
-  }, []);
+    );
+  }, [rows, searchQuery]);
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
