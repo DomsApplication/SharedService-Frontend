@@ -32,22 +32,22 @@ const SidebarContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1), // Add padding for better spacing
 
   [theme.breakpoints.up("lg")]: {
-    width: 270,   // Larger width for large screens
-    height: '100vh', // Full height for larger screens
+    width: 270,
+    height: '100vh',
   },
   [theme.breakpoints.down("lg")]: {
     width: 240,
-    height: '100vh', // Full height for larger screens
+    height: '100vh',
   },
   [theme.breakpoints.down("md")]: {
     width: 240,
-    height: '90vh',  // Full height for medium screens
-    minHeight: '95vh', // Minimum height for better spacing
+    height: '95vh', 
+    minHeight: '90vh',
   },
   [theme.breakpoints.down("sm")]: {
     width: 240,     
-    height: '100vh', // Full height for smaller screens
-    minHeight: '95vh', // Minimum height for better spacing
+    height: '95vh',
+    minHeight: '90vh',
   },
 }));
 
