@@ -41,7 +41,7 @@ function App() {
     if (isAuthenticated) {
       getUserDetails();
     }
-  }, [getAccessTokenSilently, isAuthenticated]);
+  }, [getAccessTokenSilently, isAuthenticated, appMetadata, userMetadata, userPicture]);
 
   return (
     <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
