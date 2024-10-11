@@ -15,7 +15,6 @@ function App() {
   const [isMetadataLoaded, setIsMetadataLoaded] = useState(false);
   const [userMetadata, setUserMetadata] = useState(null);
   const [appMetadata, setAppMetadata] = useState(null);
-  const [userPicture, setUserPicture] = useState(null);
 
   useEffect(() => {
     const getUserDetails = async () => {
@@ -24,14 +23,13 @@ function App() {
         console.log("accessToken:::" + accessToken);
         const decodedToken = JSON.parse(atob(accessToken.split(".")[1]));
         const NAME_SPACE = process.env.REACT_APP_NAMESPACE;
-
-        setUserMetadata(decodedToken[`${NAME_SPACE}user_metadata`]);
-        setAppMetadata(decodedToken[`${NAME_SPACE}app_metadata`]);
-        setUserPicture(decodedToken[`${NAME_SPACE}app_metadata`]);
-        console.log("user_meta:::" + JSON.stringify(userMetadata));
-        console.log("app_meta:::" + JSON.stringify(appMetadata));
-        console.log("user_picture:::" + JSON.stringify(userPicture));
+        const user_metadata = decodedToken[`${NAME_SPACE}user_metadata`];
+        const app_metadata = decodedToken[`${NAME_SPACE}app_metadata`];
+        console.log("user_meta:::" + JSON.stringify(user_metadata));
+        console.log("app_meta:::" + JSON.stringify(app_metadata));
         
+        setUserMetadata(user_metadata);
+        setAppMetadata(app_metadata);
         setIsMetadataLoaded(true);
       } catch (e) {
         console.error(e);
@@ -41,14 +39,14 @@ function App() {
     if (isAuthenticated) {
       getUserDetails();
     }
-  }, [getAccessTokenSilently, isAuthenticated, appMetadata, userMetadata, userPicture]);
+  }, [getAccessTokenSilently, isAuthenticated]);
 
   return (
     <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
       {!isAuthenticated && isLoading && <LoadMask size={100} show={true} />}
       {!isAuthenticated && !isLoading && <Welcome />}
       {isAuthenticated && isMetadataLoaded && (
-        <TenantContext.Provider value={{ userMetadata, appMetadata, userPicture }}>
+        <TenantContext.Provider value={{ userMetadata, appMetadata }}>
           <CssBaseline>
             <ThemeProvider theme={DEFAULT_THEME}>
               <Main />
