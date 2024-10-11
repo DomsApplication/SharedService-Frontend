@@ -12,8 +12,10 @@ import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import MenuIcon from "@mui/icons-material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import BusinessIcon from '@mui/icons-material/Business';
+import BusinessIcon from "@mui/icons-material/Business";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import { Person } from "@mui/icons-material";
@@ -22,7 +24,6 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import Tooltip from "@mui/material/Tooltip";
 import { useAuth0 } from "@auth0/auth0-react";
-import { TenantContext } from "../App";
 import Paper from "@mui/material/Paper";
 import MenuList from "@mui/material/MenuList";
 import Button from "@mui/material/Button";
@@ -37,12 +38,6 @@ import Grid from "@mui/material/Grid";
 const toolbarStyle = {
   minHeight: "50px",
 };
-
-const Logo = styled("img")(({ theme }) => ({
-  height: 40,
-  marginRight: 16,
-  cursor: "pointer",
-}));
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -86,12 +81,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function HeadLayout({ toggle }) {
-  const { logout } = useAuth0();
-  const tenantContext = React.useContext(TenantContext);
+  const { user, logout } = useAuth0();
   const [userPiture, setUserPiture] = React.useState(null);
   const [userName, setUserName] = React.useState(null);
   const [userEmail, setUserEmail] = React.useState(null);
-  const [userInfo, setUserInfo] = React.useState(null);
 
   const [openUserInfoWindow, setOpenUserInfoWindow] = React.useState(false);
   const handleUserInfoWindowOpen = () => {
@@ -397,7 +390,7 @@ function HeadLayout({ toggle }) {
                 style={{ paddingTop: "3px", textAlign: "left" }}
               >
                 <Typography>
-                  <b>{userInfo != null ? userInfo.nickname : ""}</b>
+                  <b>{user != null ? user.nickname : ""}</b>
                 </Typography>
               </Grid>
               <Grid
@@ -413,7 +406,7 @@ function HeadLayout({ toggle }) {
                 style={{ paddingTop: "3px", textAlign: "left" }}
               >
                 <Typography>
-                  <b>{userInfo != null ? userInfo.last_login : ""}</b>
+                  <b>{user != null ? user.last_login : ""}</b>
                 </Typography>
               </Grid>
               <Grid
@@ -429,7 +422,7 @@ function HeadLayout({ toggle }) {
                 style={{ paddingTop: "3px", textAlign: "left" }}
               >
                 <Typography>
-                  <b>{userInfo != null ? userInfo.logins_count : ""}</b>
+                  <b>{user != null ? user.logins_count : ""}</b>
                 </Typography>
               </Grid>
               <Grid
@@ -445,7 +438,7 @@ function HeadLayout({ toggle }) {
                 style={{ paddingTop: "3px", textAlign: "left" }}
               >
                 <Typography>
-                  <b>{userInfo != null ? userInfo.created_at : ""}</b>
+                  <b>{user != null ? user.created_at : ""}</b>
                 </Typography>
               </Grid>
             </Grid>
@@ -461,11 +454,10 @@ function HeadLayout({ toggle }) {
   );
 
   React.useEffect(() => {
-    setUserPiture(tenantContext.userInfo.picture);
-    setUserName(tenantContext.userInfo.name);
-    setUserEmail(tenantContext.userInfo.email);
-    setUserInfo(tenantContext.userInfo);
-  }, [tenantContext.userInfo]);
+    setUserPiture(user.picture);
+    setUserName(user.name);
+    setUserEmail(user.email);
+  }, [user]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -475,30 +467,38 @@ function HeadLayout({ toggle }) {
         style={{ backgroundColor: "white", color: "black" }}
       >
         <Toolbar style={toolbarStyle}>
-          <Logo src="/logo-250x250.png" alt="Company Logo" onClick={toggle} />
-
+          <Tooltip title="Menu" arrow>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={toggle}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Select Tenants" arrow>
             <Button
               variant="outlined"
               onClick={handleClick}
-              size="large"
+              size="small"
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              sx={{ mr: 1 }}
+              sx={{ mr: 0 }}
               aria-controls={isAppServiceOpen ? appServiceId : undefined}
               aria-haspopup="true"
               aria-expanded={isAppServiceOpen ? "true" : undefined}
               startIcon={<BusinessIcon />}
+              endIcon={<KeyboardArrowDownIcon />}
             >
-
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            I am Villan
-          </Typography>
-
+                I am Villan
+              </Typography>
             </Button>
           </Tooltip>
-
 
           {/** Application Name */}
           <Typography variant="h9" component="div" sx={{ flexGrow: 1 }}>
