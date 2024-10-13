@@ -61,8 +61,8 @@ resource "aws_s3_bucket_public_access_block" "static_web_page_public_access_bloc
 resource "aws_s3_bucket_logging" "example" {
   bucket = aws_s3_bucket.static_web_page.id
 
-  target_bucket = aws_s3_bucket.static_web_page_access_logging.id
-  target_prefix = "${aws_s3_bucket.static_web_page.id}-access-logs/"
+  target_bucket = aws_s3_bucket.static_web_page.id
+  target_prefix = "webpage-access-logs/"
 }
 
 resource "aws_s3_bucket_versioning" "static_web_page_versioning" {
@@ -83,55 +83,16 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "static_web_page_s
   }
 }
 
-########################################################################
-# aws s3 bucket : This is for access log for the static web pages application UI 
-########################################################################
-resource "aws_s3_bucket" "static_web_page_access_logging" {
-  bucket = "${var.stack_name}-${data.aws_caller_identity.current.account_id}-${var.product}-ui-logs"
-
-  lifecycle {
-    prevent_destroy = false
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "static_web_page_access_logging_public_access_block" {
-  bucket = aws_s3_bucket.static_web_page_access_logging.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_versioning" "static_web_page_access_logging_versioning" {
-  bucket = aws_s3_bucket.static_web_page_access_logging.id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "static_web_page_access_logging_server_side_encryption_configuration" {
-  bucket = aws_s3_bucket.static_web_page_access_logging.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
 resource "aws_s3_bucket_ownership_controls" "static_web_page_access_ownership_controls" {
-  bucket = aws_s3_bucket.static_web_page_access_logging.id
+  bucket = aws_s3_bucket.static_web_page.id
 
   rule {
       object_ownership = "BucketOwnerPreferred"
   }
 }
 
-
 ########################################################################
-# aws s3 bucket : This is for aws cloudfront distribution 
+# aws Cloud Front : This is for aws cloudfront distribution 
 ########################################################################
 resource "aws_cloudfront_distribution" "cf_distribution" {
     origin {
@@ -181,8 +142,8 @@ resource "aws_cloudfront_distribution" "cf_distribution" {
 
     logging_config {
         include_cookies = false
-        bucket          = aws_s3_bucket.static_web_page_access_logging.bucket_domain_name
-        prefix          = "${aws_s3_bucket.static_web_page.id}-access-logs"
+        bucket = aws_s3_bucket.static_web_page.bucket_domain_name
+        prefix = "webpage-access-logs"
    }
 
     viewer_certificate {
